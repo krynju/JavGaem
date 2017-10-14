@@ -4,23 +4,22 @@ import java.awt.Graphics;
 
 public abstract class GameObject {
     protected ObjectID ID;
-    protected int x;
-    protected int y;
+    protected double x;
+    protected double y;
     protected double xVel;
     protected double yVel;
 
-
-    public GameObject(int x, int y, double xVel, double yVel) {
+    public GameObject(double x, double y, double xVel, double yVel) {
         this.x = x;
         this.y = y;
         this.xVel = xVel;
         this.yVel = yVel;
     }
 
-    public abstract void tick();
+    public abstract void tick(double timeElapsedSeconds);
     public abstract void render(Graphics g);
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
@@ -28,7 +27,7 @@ public abstract class GameObject {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 

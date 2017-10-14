@@ -11,10 +11,10 @@ public class Handler {
         objectList.add(obj);
     }
 
-    public void tick(){
+    public void tick(double timeElapsedSeconds){
         Iterator iter = objectList.iterator();
         for (GameObject obj : objectList) {
-            obj.tick();
+            obj.tick(timeElapsedSeconds);
         }
     }
     public void render(Graphics g){

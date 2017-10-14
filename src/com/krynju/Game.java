@@ -6,18 +6,18 @@ import java.awt.image.BufferStrategy;
 public class Game extends Canvas implements Runnable {
     private static final int WIDTH = 640;
     private static final int HEIGHT = 480;
+    private static final int TICKRATE = 100;
+    private static final int FRAMERATE = 60;
     private static final String title = "Gaem";
-
     private Thread thread;
     private boolean running = false;
-
     private Handler handler;
-
 
     private Game() {
         new Window(WIDTH, HEIGHT, title, this);
+        this.start();
         handler = new Handler();
-        handler.addObject(new Player(30,30));
+        handler.addObject(new Player(30, 30));
     }
 
     synchronized void start() {
@@ -36,24 +36,27 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void run() {
-        long lastTime = System.nanoTime();
+        double lastFrame = System.nanoTime();
+        double lastTick = System.nanoTime();
         long timer = System.currentTimeMillis();
         int frames = 0;
         int ticks = 0;
 
         while (running) {
-            long now = System.nanoTime();
+            double now = System.nanoTime();
 
-/*ticks as of now synchronised with frames*/
-            if ((now - lastTime) > 1000000000 / 60) {
-                tick();
+            if ((now - lastTick) > 1000000000 / TICKRATE) {
+                tick((now - lastTick) / 1000000000);
+                lastTick = now;
                 ticks++;
-
-                render();
-                frames++;
-
-                lastTime = now;
             }
+
+            if ((now - lastFrame) > 1000000000 / FRAMERATE) {
+                render();
+                lastFrame = now;
+                frames++;
+            }
+
             if ((System.currentTimeMillis() - timer) > 1000) {
                 System.out.println("FPS: " + frames);
                 System.out.println("ticks: " + ticks);
@@ -65,8 +68,8 @@ public class Game extends Canvas implements Runnable {
         stop();
     }
 
-    private void tick() {
-        handler.tick();
+    private void tick(double timeElapsedSeconds) {
+        handler.tick(timeElapsedSeconds);
     }
 
     private void render() {
