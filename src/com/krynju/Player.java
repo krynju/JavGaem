@@ -3,8 +3,8 @@ package com.krynju;
 import java.awt.*;
 
 public class Player extends GameObject {
-    public Player(double x, double y) {
-        super(x, y,100,100);
+    public Player(double x, double y,double xVel,double yVel) {
+        super(x, y,xVel,yVel);
         ID = ObjectID.player;
     }
 
@@ -17,6 +17,6 @@ public class Player extends GameObject {
 
     public void render(Graphics g){
         g.setColor(Color.pink);
-        g.fillRect((int)x,(int)y,70,10);
+        g.fillOval((int)x,(int)y,100,100);
     }
 }

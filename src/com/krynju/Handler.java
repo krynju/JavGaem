@@ -10,6 +10,9 @@ public class Handler {
     public void addObject(GameObject obj){
         objectList.add(obj);
     }
+    public void removeObject(GameObject obj){
+        objectList.remove(obj);
+    }
 
     public void tick(double timeElapsedSeconds){
         Iterator iter = objectList.iterator();

@@ -13,11 +13,15 @@ public class Game extends Canvas implements Runnable {
     private boolean running = false;
     private Handler handler;
 
+
     private Game() {
-        new Window(WIDTH, HEIGHT, title, this);
-        this.start();
         handler = new Handler();
-        handler.addObject(new Player(30, 30));
+        new Window(WIDTH, HEIGHT, title, this);
+
+        this.start();
+
+
+        handler.addObject(new Player(30, 30,100,100));
     }
 
     synchronized void start() {
@@ -36,6 +40,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void run() {
+
         double lastFrame = System.nanoTime();
         double lastTick = System.nanoTime();
         long timer = System.currentTimeMillis();
@@ -83,6 +88,7 @@ public class Game extends Canvas implements Runnable {
         g.setColor(Color.white);
         g.fillRect(0, 0, WIDTH, HEIGHT);
         handler.render(g);
+
         g.dispose();
         bs.show();
     }
