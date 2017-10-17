@@ -16,12 +16,12 @@ public class Game extends Canvas implements Runnable {
 
     private Game() {
         handler = new Handler();
+        this.addKeyListener(new KeyboardInput(handler));
         new Window(WIDTH, HEIGHT, title, this);
 
         this.start();
 
-
-        handler.addObject(new Player(30, 30,100,100));
+        handler.addPlayer(new Player(30, 30,0,0));
     }
 
     synchronized void start() {
@@ -80,7 +80,7 @@ public class Game extends Canvas implements Runnable {
     private void render() {
         BufferStrategy bs = this.getBufferStrategy();
         if (bs == null) {
-            createBufferStrategy(2);
+            createBufferStrategy(3);
             return;
         }
 

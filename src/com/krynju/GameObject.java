@@ -6,6 +6,23 @@ public abstract class GameObject {
     protected ObjectID ID;
     protected double x;
     protected double y;
+
+    public double getxVel() {
+        return xVel;
+    }
+
+    public void setxVel(double xVel) {
+        this.xVel = xVel;
+    }
+
+    public double getyVel() {
+        return yVel;
+    }
+
+    public void setyVel(double yVel) {
+        this.yVel = yVel;
+    }
+
     protected double xVel;
     protected double yVel;
 
@@ -23,7 +40,7 @@ public abstract class GameObject {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
@@ -31,7 +48,7 @@ public abstract class GameObject {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 }

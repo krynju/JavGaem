@@ -5,8 +5,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Handler {
+    public Player PlayerObject;
     private LinkedList<GameObject> objectList = new LinkedList<GameObject>();
-
+    public void addPlayer(Player obj){
+        objectList.add(obj);
+        PlayerObject = obj;
+    }
     public void addObject(GameObject obj){
         objectList.add(obj);
     }
