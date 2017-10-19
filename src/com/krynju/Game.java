@@ -4,24 +4,28 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable {
-    private static final int WIDTH = 640;
-    private static final int HEIGHT = 480;
-    private static final int TICKRATE = 100;
+    public static final int WIDTH = 696;
+    public static final int HEIGHT = 557;
+    public static final int GAME_WIDTH = WIDTH-56;
+    public static final int GAME_HEIGHT = HEIGHT-77;
+    private static final int TICKRATE = 200;
     private static final int FRAMERATE = 60;
     private static final String title = "Gaem";
-    private Thread thread;
     private boolean running = false;
-    private Handler handler;
 
+    private Thread thread;
+    private Handler handler;
 
     private Game() {
         handler = new Handler();
         this.addKeyListener(new KeyboardInput(handler));
         new Window(WIDTH, HEIGHT, title, this);
-
         this.start();
 
-        handler.addPlayer(new Player(30, 30,0,0));
+
+        /*pewnie po prostu dam dodawanie wszystkich obiektów w konstruktorze handlera
+        * albo zrobię jakieś .addGameObjects*/
+        handler.addPlayer(new Player(100, 100,0,0));
     }
 
     synchronized void start() {
@@ -40,7 +44,6 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void run() {
-
         double lastFrame = System.nanoTime();
         double lastTick = System.nanoTime();
         long timer = System.currentTimeMillis();

@@ -13,8 +13,10 @@ public class Window extends Canvas {
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.add(game);
+        frame.pack();
         frame.setVisible(true);
         frame.setFocusable(true);
+
 
     }
 }
