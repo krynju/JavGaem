@@ -32,6 +32,4 @@ public class Field {
         }
         return 0;
     }
-
-
 }
