@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class Handler {
+public class Modules {
     public Player PlayerObject;
     private LinkedList<GameObject> objectList = new LinkedList<GameObject>();
 

@@ -16,7 +16,5 @@ public class Window extends Canvas {
         frame.pack();
         frame.setVisible(true);
         frame.setFocusable(true);
-
-
     }
 }

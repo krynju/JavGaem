@@ -1,11 +1,7 @@
 package com.krynju;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
+import java.awt.Color;
+import java.awt.Graphics;
 
 public class Player extends GameObject {
     private int destinationX;
@@ -21,7 +17,7 @@ public class Player extends GameObject {
         ID = ObjectID.player;
     }
 
-    void arrivedAtDestination() {
+    private void arrivedAtDestination() { // to mozna podobno lambda
         setY(destinationY);
         setX(destinationX);
         setxVel(0);
@@ -31,36 +27,28 @@ public class Player extends GameObject {
     }
 
     public void tick(double timeElapsedSeconds) {
-
         x += xVel * timeElapsedSeconds;
         y += yVel * timeElapsedSeconds;
 
-        if (!atDestination) {
-            switch (movementDirection) {
-                case up:
-                    //if (y - destinationY < 5) closeToDestination = true;
-                    if (y <= destinationY) arrivedAtDestination();
-                    break;
-                case down:
-                    //if (destinationY - y < 5) closeToDestination = true;
-                    if (y >= destinationY) arrivedAtDestination();
-                    break;
-                case left:
-                    //if (x - destinationX < 5) closeToDestination = true;
-                    if (x <= destinationX) arrivedAtDestination();
-                    break;
-                case right:
-                    //if (destinationX - x < 5) closeToDestination = true;
-                    if (x >= destinationX) arrivedAtDestination();
-                    break;
-            }
+        switch (movementDirection) {
+            case up:
+                if (y <= destinationY - 0.5) arrivedAtDestination(); break;
+            case down:
+                if (y >= destinationY - 0.5) arrivedAtDestination(); break;
+            case left:
+                if (x <= destinationX - 0.5) arrivedAtDestination(); break;
+            case right:
+                if (x >= destinationX - 0.5) arrivedAtDestination(); break;
+            case none:
+                break;
         }
 
+        if(KeyboardInput.keyPressedDown != Direction.none)
+            move(KeyboardInput.keyPressedDown);
 
     }
 
     public void render(Graphics g) {
-
         g.setColor(Color.pink);
         g.fillRect((int) x, (int) y, 40, 40);
 
@@ -73,17 +61,9 @@ public class Player extends GameObject {
 //        g.drawImage(img,(int)x,(int)y,null);
     }
 
-    public void move(Direction direction) {
+    private void move(Direction direction) {
         int destination;
-
-        if (atDestination)
-            try {
-                destination = Field.getDestination(destinationX, destinationY, direction);
-            } catch (Exception e) {
-                return;
-            }
-        else if (closeToDestination && direction == movementDirection) {
-            closeToDestination = false;
+        if (atDestination) {
             try {
                 destination = Field.getDestination(destinationX, destinationY, direction);
             } catch (Exception e) {
@@ -92,11 +72,9 @@ public class Player extends GameObject {
         } else
             return;
 
-
-
         atDestination = false;
         movementDirection = direction;
-        int speed = 80;
+        int speed = 120;
         switch (direction) {
             case up:
                 setxVel(0);

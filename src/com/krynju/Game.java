@@ -1,6 +1,8 @@
 package com.krynju;
 
-import java.awt.*;
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable {
@@ -8,24 +10,24 @@ public class Game extends Canvas implements Runnable {
     public static final int HEIGHT = 557;
     public static final int GAME_WIDTH = WIDTH-56;
     public static final int GAME_HEIGHT = HEIGHT-77;
-    private static final int TICKRATE = 200;
+    private static final int TICKRATE = 100;
     private static final int FRAMERATE = 60;
     private static final String title = "Gaem";
     private boolean running = false;
 
     private Thread thread;
-    private Handler handler;
+    private Modules modules;
 
     private Game() {
-        handler = new Handler();
-        this.addKeyListener(new KeyboardInput(handler));
+        modules = new Modules();
+        this.addKeyListener(new KeyboardInput(modules));
         new Window(WIDTH, HEIGHT, title, this);
         this.start();
 
 
         /*pewnie po prostu dam dodawanie wszystkich obiektów w konstruktorze handlera
         * albo zrobię jakieś .addGameObjects*/
-        handler.addPlayer(new Player(100, 100,0,0));
+        modules.addPlayer(new Player(100, 100,0,0));
     }
 
     synchronized void start() {
@@ -52,13 +54,11 @@ public class Game extends Canvas implements Runnable {
 
         while (running) {
             double now = System.nanoTime();
-
-            if ((now - lastTick) > 1000000000 / TICKRATE) {
+            //if ((now - lastTick) > 1000000000 / TICKRATE) {
                 tick((now - lastTick) / 1000000000);
                 lastTick = now;
                 ticks++;
-            }
-
+            //}
             if ((now - lastFrame) > 1000000000 / FRAMERATE) {
                 render();
                 lastFrame = now;
@@ -72,12 +72,17 @@ public class Game extends Canvas implements Runnable {
                 frames = 0;
                 ticks = 0;
             }
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         stop();
     }
 
     private void tick(double timeElapsedSeconds) {
-        handler.tick(timeElapsedSeconds);
+        modules.tick(timeElapsedSeconds);
     }
 
     private void render() {
@@ -90,7 +95,7 @@ public class Game extends Canvas implements Runnable {
         Graphics g = bs.getDrawGraphics();
         g.setColor(Color.white);
         g.fillRect(0, 0, WIDTH, HEIGHT);
-        handler.render(g);
+        modules.render(g);
 
         g.dispose();
         bs.show();
