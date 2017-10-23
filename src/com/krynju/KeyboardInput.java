@@ -6,11 +6,7 @@ import java.awt.event.KeyEvent;
 
 public class KeyboardInput extends KeyAdapter {
     public static Direction keyPressedDown = Direction.none;
-    private Modules modules;
 
-    public KeyboardInput(Modules modules){
-        this.modules = modules;
-    }
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();

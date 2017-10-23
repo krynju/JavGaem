@@ -1,12 +1,18 @@
 package com.krynju;
 
-import java.awt.*;
+import java.awt.Graphics;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Modules {
+    public Field field;
     public Player PlayerObject;
     private LinkedList<GameObject> objectList = new LinkedList<GameObject>();
+
+    public Modules() {
+        field = new Field();
+    }
+
 
     public void addPlayer(Player obj) {
         objectList.add(obj);
@@ -29,7 +35,9 @@ public class Modules {
     }
 
     public void render(Graphics g) {
+        field.render(g);
         Iterator iter = objectList.iterator();
+
         for (GameObject obj : objectList) {
             obj.render(g);
         }

@@ -20,7 +20,7 @@ public class Game extends Canvas implements Runnable {
 
     private Game() {
         modules = new Modules();
-        this.addKeyListener(new KeyboardInput(modules));
+        this.addKeyListener(new KeyboardInput());
         new Window(WIDTH, HEIGHT, title, this);
         this.start();
 
@@ -54,11 +54,13 @@ public class Game extends Canvas implements Runnable {
 
         while (running) {
             double now = System.nanoTime();
+
             //if ((now - lastTick) > 1000000000 / TICKRATE) {
                 tick((now - lastTick) / 1000000000);
                 lastTick = now;
                 ticks++;
             //}
+
             if ((now - lastFrame) > 1000000000 / FRAMERATE) {
                 render();
                 lastFrame = now;
@@ -93,8 +95,11 @@ public class Game extends Canvas implements Runnable {
         }
 
         Graphics g = bs.getDrawGraphics();
+
+        /*background*/
         g.setColor(Color.white);
         g.fillRect(0, 0, WIDTH, HEIGHT);
+
         modules.render(g);
 
         g.dispose();

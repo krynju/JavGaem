@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Player extends GameObject {
+    private int tileCordX;
+    private int tileCordY;
     private static final int SPEED = 120;   // PLAYER's speed
     private boolean atDestination = true;   // Flag if not moving and standing on the right spot
     private int destinationX;               //PLAYER's x destination cord
@@ -17,6 +19,8 @@ public class Player extends GameObject {
         destinationX = (int) x;
         destinationY = (int) y;
         ID = ObjectID.player;
+        tileCordX = 0;
+        tileCordY = 0;
     }
 
     private void goThere(Direction direction, int destination){
@@ -71,15 +75,11 @@ public class Player extends GameObject {
     }
     private void move(Direction direction) {
         int destination;
-        if (atDestination) {
-            try {
-                destination = Field.getDestination(destinationX, destinationY, direction);
-            } catch (Exception e) {
-                return; // if not possible to move
-            }
-        } else
-            return; // if not atDestination
-
+        try {
+            destination = Field.getDestination(destinationX, destinationY, direction);
+        } catch (Exception e) {
+            return; // if not possible to move
+        }
         goThere(direction,destination);
     }
 
