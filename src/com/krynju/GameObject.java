@@ -8,48 +8,20 @@ public abstract class GameObject {
     protected double y;
     protected double xVel;
     protected double yVel;
+    protected int tileCordX;
+    protected int tileCordY;
+    protected Tile assignedTile;
 
-    public GameObject(double x, double y, double xVel, double yVel) {
-        this.x = x;
-        this.y = y;
+    public GameObject(int x, int y, double xVel, double yVel) {
+        assignedTile = Field.getTileRef(x,y);
+        this.x = assignedTile.getX();
+        this.y = assignedTile.getY();
         this.xVel = xVel;
         this.yVel = yVel;
+        tileCordX = x;
+        tileCordY = y;
     }
 
     public abstract void tick(double timeElapsedSeconds);
     public abstract void render(Graphics g);
-
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public double getxVel() {
-        return xVel;
-    }
-
-    public void setxVel(double xVel) {
-        this.xVel = xVel;
-    }
-
-    public double getyVel() {
-        return yVel;
-    }
-
-    public void setyVel(double yVel) {
-        this.yVel = yVel;
-    }
-
-
 }

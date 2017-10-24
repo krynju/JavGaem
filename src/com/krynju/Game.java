@@ -8,8 +8,8 @@ import java.awt.image.BufferStrategy;
 public class Game extends Canvas implements Runnable {
     public static final int WIDTH = 696;
     public static final int HEIGHT = 557;
-    public static final int GAME_WIDTH = WIDTH-56;
-    public static final int GAME_HEIGHT = HEIGHT-77;
+    public static final int GAME_WIDTH = WIDTH - 56;
+    public static final int GAME_HEIGHT = HEIGHT - 77;
     private static final int TICKRATE = 100;
     private static final int FRAMERATE = 60;
     private static final String title = "Gaem";
@@ -27,7 +27,13 @@ public class Game extends Canvas implements Runnable {
 
         /*pewnie po prostu dam dodawanie wszystkich obiektów w konstruktorze handlera
         * albo zrobię jakieś .addGameObjects*/
-        modules.addPlayer(new Player(100, 100,0,0));
+        modules.addPlayer(new Player(0, 0, 0, 0));
+        modules.addObject(new DestroyableWall(1, 1));
+        modules.addObject(new DestroyableWall(2, 2));
+    }
+
+    public static void main(String[] args) {
+        new Game();
     }
 
     synchronized void start() {
@@ -56,9 +62,9 @@ public class Game extends Canvas implements Runnable {
             double now = System.nanoTime();
 
             //if ((now - lastTick) > 1000000000 / TICKRATE) {
-                tick((now - lastTick) / 1000000000);
-                lastTick = now;
-                ticks++;
+            tick((now - lastTick) / 1000000000);
+            lastTick = now;
+            ticks++;
             //}
 
             if ((now - lastFrame) > 1000000000 / FRAMERATE) {
@@ -104,9 +110,5 @@ public class Game extends Canvas implements Runnable {
 
         g.dispose();
         bs.show();
-    }
-
-    public static void main(String[] args) {
-        new Game();
     }
 }

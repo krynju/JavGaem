@@ -4,8 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Player extends GameObject {
-    private int tileCordX;
-    private int tileCordY;
+
     private static final int SPEED = 120;   // PLAYER's speed
     private boolean atDestination = true;   // Flag if not moving and standing on the right spot
     private int destinationX;               //PLAYER's x destination cord
@@ -14,73 +13,78 @@ public class Player extends GameObject {
     private Direction queuedDirection = Direction.none;     //Queued movements direction
     private Direction movementDirection = Direction.none;   //Movements direction
 
-    public Player(double x, double y, double xVel, double yVel) {
+    public Player(int x, int y, double xVel, double yVel) {
         super(x, y, xVel, yVel);
-        destinationX = (int) x;
-        destinationY = (int) y;
+        destinationX = assignedTile.getX();
+        destinationY = assignedTile.getY();
         ID = ObjectID.player;
-        tileCordX = 0;
-        tileCordY = 0;
     }
 
-    private void goThere(Direction direction, int destination){
+    private void goTo(Direction direction, int destination) {
         atDestination = false;
         movementDirection = direction;
-        switch (direction){
+        switch (direction) {
             case up:
-                setxVel(0);
-                setyVel(-SPEED);
+                xVel = 0;
+                yVel = -SPEED;
                 destinationY = destination;
+                tileCordY--;
                 break;
             case down:
-                setxVel(0);
-                setyVel(SPEED);
+                xVel = 0;
+                yVel = SPEED;
                 destinationY = destination;
+                tileCordY++;
                 break;
             case left:
-                setxVel(-SPEED);
-                setyVel(0);
+                xVel = -SPEED;
+                yVel = 0;
                 destinationX = destination;
+                tileCordX--;
                 break;
             case right:
-                setxVel(SPEED);
-                setyVel(0);
+                xVel = SPEED;
+                yVel = 0;
                 destinationX = destination;
+                tileCordX++;
                 break;
         }
     }
+
     private void arrivedAtDestination() { // to mozna podobno lambda
         /*Stopping the object at destination*/
-        setY(destinationY);
-        setX(destinationX);
-        setxVel(0);
-        setyVel(0);
+        y = destinationY;
+        x = destinationX;
+        xVel = 0;
+        yVel = 0;
         atDestination = true;
 
         /*Check if there's a queued movement and if the queued movement key is still pressed down*/
-        if(queuedDirection != Direction.none && queuedDirection == KeyboardInput.keyPressedDown){
-            goThere(queuedDirection,queuedDestination);
+        if (queuedDirection != Direction.none && queuedDirection == KeyboardInput.keyPressedDown) {
+            goTo(queuedDirection, queuedDestination);
             queuedDirection = Direction.none;
         }
     }
+
     private void queueMovement(Direction keyPressedDown) {
         int destination;
         try {
-            destination = Field.getDestination(destinationX, destinationY, keyPressedDown);
+            destination = Field.getDestination(tileCordX, tileCordY, keyPressedDown);
         } catch (Exception e) {
             return;
         }
         queuedDestination = destination;
         queuedDirection = keyPressedDown;
     }
+
     private void move(Direction direction) {
         int destination;
         try {
-            destination = Field.getDestination(destinationX, destinationY, direction);
+            destination = Field.getDestination(tileCordX, tileCordY, direction);
         } catch (Exception e) {
             return; // if not possible to move
         }
-        goThere(direction,destination);
+        goTo(direction, destination);
     }
 
     public void tick(double timeElapsedSeconds) {
@@ -91,23 +95,27 @@ public class Player extends GameObject {
         /*Stop check - if at or further than destination do a stop */
         switch (movementDirection) {
             case up:
-                if (y <= destinationY - 0.5) arrivedAtDestination(); break;
+                if (y <= destinationY - 0.5) arrivedAtDestination();
+                break;
             case down:
-                if (y >= destinationY - 0.5) arrivedAtDestination(); break;
+                if (y >= destinationY - 0.5) arrivedAtDestination();
+                break;
             case left:
-                if (x <= destinationX - 0.5) arrivedAtDestination(); break;
+                if (x <= destinationX - 0.5) arrivedAtDestination();
+                break;
             case right:
-                if (x >= destinationX - 0.5) arrivedAtDestination(); break;
+                if (x >= destinationX - 0.5) arrivedAtDestination();
+                break;
             case none:
                 break;
         }
 
         /*Basic movement - object not moving and key pressed*/
-        if(atDestination && KeyboardInput.keyPressedDown != Direction.none)
+        if (atDestination && KeyboardInput.keyPressedDown != Direction.none)
             move(KeyboardInput.keyPressedDown);
 
         /*Queued movement - object moving and close to destination, key pressed*/
-        if(!atDestination && KeyboardInput.keyPressedDown != Direction.none) {
+        if (!atDestination && KeyboardInput.keyPressedDown != Direction.none) {
             int d = 10;
             switch (movementDirection) {
                 case up:
@@ -127,6 +135,7 @@ public class Player extends GameObject {
             }
         }
     }
+
     public void render(Graphics g) {
         g.setColor(Color.pink);
         g.fillRect((int) x, (int) y, 40, 40);

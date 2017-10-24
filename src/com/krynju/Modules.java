@@ -35,7 +35,7 @@ public class Modules {
     }
 
     public void render(Graphics g) {
-        field.render(g);
+        Field.render(g);
         Iterator iter = objectList.iterator();
 
         for (GameObject obj : objectList) {
