@@ -3,6 +3,7 @@ package com.krynju.modules;
 import com.krynju.Direction;
 import com.krynju.Field;
 import com.krynju.KeyboardInput;
+import com.krynju.Modules;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -150,5 +151,9 @@ public class Player extends GameObject {
 //        }
 //        catch (IOException e) { e.printStackTrace(); }
 //        g.drawImage(img,(int)x,(int)y,null);
+    }
+
+    public void placeBomb(){
+            Modules.bomb.setAt(destinationX,destinationY);
     }
 }

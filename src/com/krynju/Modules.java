@@ -1,5 +1,6 @@
 package com.krynju;
 
+import com.krynju.modules.Bomb;
 import com.krynju.modules.GameObject;
 import com.krynju.modules.Player;
 
@@ -8,12 +9,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Modules {
-    public Field field;
-    public Player PlayerObject;
+    public static Field field;
+    public static Player PlayerObject;
+    public static Bomb bomb;
     private LinkedList<GameObject> objectList = new LinkedList<GameObject>();
 
     public Modules() {
         field = new Field();
+        bomb = new Bomb(0,0,0,0);
+        addObject(bomb);
     }
 
     public void addPlayer(Player obj) {

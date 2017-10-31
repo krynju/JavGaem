@@ -1,5 +1,6 @@
 package com.krynju;
 
+import com.krynju.modules.Bomb;
 import com.krynju.modules.DestroyableWall;
 import com.krynju.modules.Player;
 
@@ -23,7 +24,7 @@ public class Game extends Canvas implements Runnable {
 
     private Game() {
         modules = new Modules();
-        this.addKeyListener(new KeyboardInput());
+        this.addKeyListener(new KeyboardInput(modules));
         new Window(WIDTH, HEIGHT, title, this);
         this.start();
 
