@@ -1,4 +1,8 @@
-package com.krynju;
+package com.krynju.modules;
+
+import com.krynju.Direction;
+import com.krynju.Field;
+import com.krynju.KeyboardInput;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -116,7 +120,7 @@ public class Player extends GameObject {
 
         /*Queued movement - object moving and close to destination, key pressed*/
         if (!atDestination && KeyboardInput.keyPressedDown != Direction.none) {
-            int d = 10;
+            int d = 20;
             switch (movementDirection) {
                 case up:
                     if (y <= destinationY - d) queueMovement(KeyboardInput.keyPressedDown);

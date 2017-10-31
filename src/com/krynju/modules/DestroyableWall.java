@@ -1,6 +1,7 @@
-package com.krynju;
+package com.krynju.modules;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 
 public class DestroyableWall extends GameObject {
 

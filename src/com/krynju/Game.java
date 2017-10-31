@@ -1,5 +1,8 @@
 package com.krynju;
 
+import com.krynju.modules.DestroyableWall;
+import com.krynju.modules.Player;
+
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;

@@ -1,4 +1,7 @@
-package com.krynju;
+package com.krynju.modules;
+
+import com.krynju.Field;
+import com.krynju.Tile;
 
 import java.awt.Graphics;
 

@@ -1,5 +1,8 @@
 package com.krynju;
 
+import com.krynju.modules.GameObject;
+import com.krynju.modules.Player;
+
 import java.awt.Graphics;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,7 +15,6 @@ public class Modules {
     public Modules() {
         field = new Field();
     }
-
 
     public void addPlayer(Player obj) {
         objectList.add(obj);
