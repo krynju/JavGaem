@@ -10,8 +10,8 @@ import java.awt.Graphics;
 
 public class Player extends GameObject {
 
-    private static final int SPEED = 120;   // PLAYER's speed
-    private boolean atDestination = true;   // Flag if not moving and standing on the right spot
+    private static final int SPEED = 120;   //PLAYER's speed
+    private boolean atDestination = true;   //Flag if not moving and standing on the rightInQueue spot
     private int destinationX;               //PLAYER's x destination cord
     private int destinationY;               //PLAYER's y destination cord
     private int queuedDestination;          //PLAYER's queued destination cord
@@ -64,8 +64,14 @@ public class Player extends GameObject {
         yVel = 0;
         atDestination = true;
 
-        /*Check if there's a queued movement and if the queued movement key is still pressed down*/
-        if (queuedDirection != Direction.none && queuedDirection == KeyboardInput.keyPressedDown) {
+        /*Check if there's a queued movement and if the queued movement key is still pressed downInQueue*/
+        Direction direction;
+        try {
+            direction = KeyboardInput.queuedKeys.getLast();
+        } catch (Exception e) {
+            return;
+        }
+        if (queuedDirection != Direction.none && queuedDirection == direction) {
             goTo(queuedDirection, queuedDestination);
             queuedDirection = Direction.none;
         }
@@ -96,7 +102,6 @@ public class Player extends GameObject {
         /*Calculating new position*/
         x += xVel * timeElapsedSeconds;
         y += yVel * timeElapsedSeconds;
-
         /*Stop check - if at or further than destination do a stop */
         switch (movementDirection) {
             case up:
@@ -115,29 +120,36 @@ public class Player extends GameObject {
                 break;
         }
 
-        /*Basic movement - object not moving and key pressed*/
-        if (atDestination && KeyboardInput.keyPressedDown != Direction.none)
-            move(KeyboardInput.keyPressedDown);
+        Direction direction;
+        try {
+            direction = KeyboardInput.queuedKeys.getLast();
+        } catch (Exception e) {
+            return;
+        }
 
+        /*Basic movement - object not moving and key pressed*/
+        if (atDestination && direction != Direction.none)
+            move(direction);
         /*Queued movement - object moving and close to destination, key pressed*/
-        if (!atDestination && KeyboardInput.keyPressedDown != Direction.none) {
+        if (!atDestination && direction != Direction.none) {
             int d = 20;
             switch (movementDirection) {
                 case up:
-                    if (y <= destinationY - d) queueMovement(KeyboardInput.keyPressedDown);
+                    if (y <= destinationY - d) queueMovement(direction);
                     break;
                 case down:
-                    if (y >= destinationY - d) queueMovement(KeyboardInput.keyPressedDown);
+                    if (y >= destinationY - d) queueMovement(direction);
                     break;
                 case left:
-                    if (x <= destinationX - d) queueMovement(KeyboardInput.keyPressedDown);
+                    if (x <= destinationX - d) queueMovement(direction);
                     break;
                 case right:
-                    if (x >= destinationX - d) queueMovement(KeyboardInput.keyPressedDown);
+                    if (x >= destinationX - d) queueMovement(direction);
                     break;
                 case none:
                     break;
             }
+
         }
     }
 

@@ -24,7 +24,7 @@ public class Game extends Canvas implements Runnable {
 
     private Game() {
         modules = new Modules();
-        this.addKeyListener(new KeyboardInput(modules));
+        this.addKeyListener(new KeyboardInput());
         new Window(WIDTH, HEIGHT, title, this);
         this.start();
 
@@ -84,11 +84,11 @@ public class Game extends Canvas implements Runnable {
                 frames = 0;
                 ticks = 0;
             }
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(1);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
         stop();
     }
