@@ -5,9 +5,18 @@ public class Tile {
     private boolean blocked = false;
     private boolean bombed = false;
 
+
     public Tile(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public boolean isBombed() {
+        return bombed;
+    }
+
+    public void setBombed(boolean bombed) {
+        this.bombed = bombed;
     }
 
     public int getX() {

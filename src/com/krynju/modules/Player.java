@@ -8,6 +8,8 @@ import com.krynju.Modules;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import static java.lang.Math.abs;
+
 public class Player extends GameObject {
 
     private static final int SPEED = 120;   //PLAYER's speed
@@ -28,6 +30,7 @@ public class Player extends GameObject {
     private void goTo(Direction direction, int destination) {
         atDestination = false;
         movementDirection = direction;
+
         switch (direction) {
             case up:
                 xVel = 0;
@@ -54,6 +57,7 @@ public class Player extends GameObject {
                 tileCordX++;
                 break;
         }
+
     }
 
     private void arrivedAtDestination() { // to mozna podobno lambda
@@ -62,19 +66,29 @@ public class Player extends GameObject {
         x = destinationX;
         xVel = 0;
         yVel = 0;
+
         atDestination = true;
 
+//        System.out.println(tileCordX);
+//        System.out.println(tileCordY);
+//        System.out.println(assignedTile.getX());
+//        System.out.println(assignedTile.getY());
+//        System.out.println(destinationX);
+//        System.out.println(destinationY);
+
+        assignedTile= Field.getTileRef(tileCordX,tileCordY);
+
         /*Check if there's a queued movement and if the queued movement key is still pressed downInQueue*/
-        Direction direction;
-        try {
-            direction = KeyboardInput.queuedKeys.getLast();
-        } catch (Exception e) {
-            return;
-        }
-        if (queuedDirection != Direction.none && queuedDirection == direction) {
-            goTo(queuedDirection, queuedDestination);
-            queuedDirection = Direction.none;
-        }
+//        Direction direction;
+//        try {
+//            direction = KeyboardInput.queuedKeys.getLast();
+//        } catch (Exception e) {
+//            return;
+//        }
+//        if (queuedDirection != Direction.none && queuedDirection == direction) {
+//            goTo(queuedDirection, queuedDestination);
+//            queuedDirection = Direction.none;
+//        }
     }
 
     private void queueMovement(Direction keyPressedDown) {
@@ -103,21 +117,23 @@ public class Player extends GameObject {
         x += xVel * timeElapsedSeconds;
         y += yVel * timeElapsedSeconds;
         /*Stop check - if at or further than destination do a stop */
-        switch (movementDirection) {
-            case up:
-                if (y <= destinationY - 0.5) arrivedAtDestination();
-                break;
-            case down:
-                if (y >= destinationY - 0.5) arrivedAtDestination();
-                break;
-            case left:
-                if (x <= destinationX - 0.5) arrivedAtDestination();
-                break;
-            case right:
-                if (x >= destinationX - 0.5) arrivedAtDestination();
-                break;
-            case none:
-                break;
+        if(!atDestination) {
+            switch (movementDirection) {
+                case up:
+                    if (y <= destinationY - 0.5) arrivedAtDestination();
+                    break;
+                case down:
+                    if (y >= destinationY - 0.5) arrivedAtDestination();
+                    break;
+                case left:
+                    if (x <= destinationX - 0.5) arrivedAtDestination();
+                    break;
+                case right:
+                    if (x >= destinationX - 0.5) arrivedAtDestination();
+                    break;
+                case none:
+                    break;
+            }
         }
 
         Direction direction;
@@ -130,27 +146,27 @@ public class Player extends GameObject {
         /*Basic movement - object not moving and key pressed*/
         if (atDestination && direction != Direction.none)
             move(direction);
-        /*Queued movement - object moving and close to destination, key pressed*/
-        if (!atDestination && direction != Direction.none) {
-            int d = 20;
-            switch (movementDirection) {
-                case up:
-                    if (y <= destinationY - d) queueMovement(direction);
-                    break;
-                case down:
-                    if (y >= destinationY - d) queueMovement(direction);
-                    break;
-                case left:
-                    if (x <= destinationX - d) queueMovement(direction);
-                    break;
-                case right:
-                    if (x >= destinationX - d) queueMovement(direction);
-                    break;
-                case none:
-                    break;
-            }
-
-        }
+//        /*Queued movement - object moving and close to destination, key pressed*/
+//        if (!atDestination && direction != Direction.none) {
+//            int d = 20;
+//            switch (movementDirection) {
+//                case up:
+//                    if (y <= destinationY - d) queueMovement(direction);
+//                    break;
+//                case down:
+//                    if (y >= destinationY - d) queueMovement(direction);
+//                    break;
+//                case left:
+//                    if (x <= destinationX - d) queueMovement(direction);
+//                    break;
+//                case right:
+//                    if (x >= destinationX - d) queueMovement(direction);
+//                    break;
+//                case none:
+//                    break;
+//            }
+//
+//        }
     }
 
     public void render(Graphics g) {
@@ -166,6 +182,23 @@ public class Player extends GameObject {
     }
 
     public void placeBomb(){
-            Modules.bomb.setAt(destinationX,destinationY);
+        if(atDestination || (abs(x - destinationX) < 30))
+            Modules.bomb.setAt(tileCordX,tileCordY);
+        else{
+            switch(movementDirection){
+                case up:
+                    Modules.bomb.setAt(tileCordX,tileCordY+1);
+                    break;
+                case down:
+                    Modules.bomb.setAt(tileCordX,tileCordY-1);
+                    break;
+                case left:
+                    Modules.bomb.setAt(tileCordX+1,tileCordY);
+                    break;
+                case right:
+                    Modules.bomb.setAt(tileCordX-1,tileCordY);
+                    break;
+            }
+        }
     }
 }

@@ -29,10 +29,13 @@ public class Field {
     }
 
     private static boolean possibleToMove(int x,int y){
+        if(tileField[x][y].isBlocked())
+            return false;
+        if(tileField[x][y].isBombed())
+            return false;
         if(x < 0 || y < 0 || x > tileCount-1 || y > tileCount-1)
             return false;
-        return !tileField[x][y].isBlocked();
-
+        return true;
     }
     public static int getDestination(int x, int y, Direction direction) throws UnableToMove {
         switch (direction) {
