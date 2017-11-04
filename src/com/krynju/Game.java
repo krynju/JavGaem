@@ -1,10 +1,6 @@
 package com.krynju;
 
-import com.krynju.modules.*;
-
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 public class Game extends Canvas implements Runnable {
@@ -18,21 +14,15 @@ public class Game extends Canvas implements Runnable {
     private boolean running = false;
 
     private Thread thread;
-    private Modules modules;
+    private Model model;
 
     private Game() {
-        modules = new Modules();
+        model = new Model();
+        model.initialiseGameObjects();
         this.addKeyListener(new KeyboardInput());
+
         new Window(WIDTH, HEIGHT, title, this);
         this.start();
-
-
-        /*pewnie po prostu dam dodawanie wszystkich obiektów w konstruktorze handlera
-        * albo zrobię jakieś .addGameObjects*/
-        modules.addPlayer(new Player(0, 0, 0, 0));
-        modules.addObject(new DestroyableWall(1, 1));
-        modules.addObject(new DestroyableWall(2, 2));
-        modules.addObject(new NormalWall(4,4));
     }
 
     public static void main(String[] args) {
@@ -91,7 +81,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     private void tick(double timeElapsedSeconds) {
-        modules.tick(timeElapsedSeconds);
+        model.tick(timeElapsedSeconds);
     }
 
     private void render() {
@@ -107,7 +97,7 @@ public class Game extends Canvas implements Runnable {
         g.setColor(Color.white);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        modules.render(g);
+        model.render(g);
 
         g.dispose();
         bs.show();

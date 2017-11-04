@@ -1,9 +1,9 @@
 package com.krynju.modules;
 
-import com.krynju.Direction;
-import com.krynju.Field;
+import com.krynju.enums.Direction;
 import com.krynju.KeyboardInput;
-import com.krynju.Modules;
+import com.krynju.Model;
+import com.krynju.enums.ObjectID;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -134,21 +134,23 @@ public class Player extends GameObject {
     }
 
     public void placeBomb(){
-        if(atDestination || (abs(x - destinationX) < 30))
-            Modules.bomb.setAt(tileCordX,tileCordY);
+        if(Model.bomb.isBombSet())
+            return;
+        else if(atDestination || (abs(x - destinationX) < 30))
+            Model.bomb.setAt(tileCordX,tileCordY);
         else{
             switch(movementDirection){
                 case up:
-                    Modules.bomb.setAt(tileCordX,tileCordY+1);
+                    Model.bomb.setAt(tileCordX,tileCordY+1);
                     break;
                 case down:
-                    Modules.bomb.setAt(tileCordX,tileCordY-1);
+                    Model.bomb.setAt(tileCordX,tileCordY-1);
                     break;
                 case left:
-                    Modules.bomb.setAt(tileCordX+1,tileCordY);
+                    Model.bomb.setAt(tileCordX+1,tileCordY);
                     break;
                 case right:
-                    Modules.bomb.setAt(tileCordX-1,tileCordY);
+                    Model.bomb.setAt(tileCordX-1,tileCordY);
                     break;
             }
         }

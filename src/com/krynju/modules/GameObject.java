@@ -1,7 +1,6 @@
 package com.krynju.modules;
 
-import com.krynju.Field;
-import com.krynju.Tile;
+import com.krynju.enums.ObjectID;
 
 import java.awt.Graphics;
 

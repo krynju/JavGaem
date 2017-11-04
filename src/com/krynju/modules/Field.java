@@ -1,4 +1,6 @@
-package com.krynju;
+package com.krynju.modules;
+
+import com.krynju.enums.Direction;
 
 import java.awt.Color;
 import java.awt.Graphics;

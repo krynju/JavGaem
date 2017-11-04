@@ -1,4 +1,4 @@
-package com.krynju.modules;
+package com.krynju.enums;
 
 public enum ObjectID {
     player,

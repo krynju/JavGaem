@@ -1,6 +1,8 @@
 package com.krynju;
 
 
+import com.krynju.enums.Direction;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
@@ -44,7 +46,7 @@ public class KeyboardInput extends KeyAdapter {
             }
         }
         if (key == KeyEvent.VK_SPACE)
-            Modules.PlayerObject.placeBomb();
+            Model.PlayerObject.placeBomb();
     }
 
     @Override

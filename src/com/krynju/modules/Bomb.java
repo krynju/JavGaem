@@ -1,21 +1,19 @@
 package com.krynju.modules;
 
-import com.krynju.Field;
-import com.krynju.Tile;
-
 import java.awt.Color;
 import java.awt.Graphics;
 
 public class Bomb extends GameObject {
-    public static final int tickingTime = 2;
-    public boolean bombSet = false;
-    public boolean bombTicking = false;
+    private static final int tickingTime = 2;
 
-    public double timeElapsed = 0;
+    private boolean bombSet = false;
+
+    private boolean bombTicking = false;
+    private double timeElapsed = 0;
 
 
-    public Bomb(int x, int y, double xVel, double yVel) {
-        super(x, y, xVel, yVel);
+    public Bomb(int x, int y) {
+        super(x, y,0, 0);
     }
 
     @Override
@@ -50,7 +48,7 @@ public class Bomb extends GameObject {
         bombTicking = true;
     }
 
-    public void boom(){
+    private void boom(){
         bombTicking = false;
         bombSet = false;
         assignedTile.setBombed(false);
@@ -74,7 +72,8 @@ public class Bomb extends GameObject {
 
     }
 
-    public boolean checkTile(int x, int y){
+    private boolean checkTile(int x, int y){
+        /*fetch the tile at cords*/
         Tile tile;
         try{
             tile = Field.getTileRef(x,y);
@@ -82,11 +81,17 @@ public class Bomb extends GameObject {
             return false;
         }
 
+        /*destroy walls if possible*/
         if(tile.isWallOnTile()){
             if(tile.getWall().isDestroyable())
                 tile.getWall().destroy();
         }
+
         return tile.isPlayerOnTile();
+    }
+
+    public boolean isBombSet() {
+        return bombSet;
     }
 
 }

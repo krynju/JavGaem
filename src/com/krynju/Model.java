@@ -1,36 +1,33 @@
 package com.krynju;
 
-import com.krynju.modules.Bomb;
-import com.krynju.modules.GameObject;
-import com.krynju.modules.Player;
+import com.krynju.modules.*;
 
 import java.awt.Graphics;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class Modules {
+public class Model {
     public static Field field;
     public static Player PlayerObject;
     public static Bomb bomb;
     private static LinkedList<GameObject> objectList = new LinkedList<GameObject>();
 
-    public Modules() {
+    public Model() {
+
+    }
+
+    public void initialiseGameObjects(){
         field = new Field();
-        bomb = new Bomb(0,0,0,0);
-        addObject(bomb);
-    }
 
-    public void addPlayer(Player obj) {
-        objectList.add(obj);
-        PlayerObject = obj;
-    }
+        bomb = new Bomb(0,0);
+        objectList.add(bomb);
+        PlayerObject = new Player(0, 0, 0, 0);
+        objectList.add(PlayerObject);
 
-    public static void addObject(GameObject obj) {
-        objectList.add(obj);
-    }
-
-    public static void removeObject(GameObject obj) {
-        objectList.remove(obj);
+        /*walls*/
+        objectList.add(new DestroyableWall(1, 1));
+        objectList.add(new DestroyableWall(2, 2));
+        objectList.add(new NormalWall(4,4));
     }
 
     public void tick(double timeElapsedSeconds) {

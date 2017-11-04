@@ -1,4 +1,4 @@
-package com.krynju;
+package com.krynju.modules;
 
 import com.krynju.modules.Wall;
 
