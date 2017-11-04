@@ -9,14 +9,14 @@ import java.util.LinkedList;
 
 
 public class KeyboardInput extends KeyAdapter {
-    public static boolean upInQueue = false;
-    public static boolean downInQueue = false;
-    public static boolean leftInQueue = false;
-    public static boolean rightInQueue = false;
+    private static boolean upInQueue = false;
+    private static boolean downInQueue = false;
+    private static boolean leftInQueue = false;
+    private static boolean rightInQueue = false;
+    private static boolean placeBomb = false;
 
     public static LinkedList<Direction> queuedKeys = new LinkedList<Direction>();
 
-    public static Direction keyPressedDown = Direction.none;
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -46,7 +46,7 @@ public class KeyboardInput extends KeyAdapter {
             }
         }
         if (key == KeyEvent.VK_SPACE)
-            Model.PlayerObject.placeBomb();
+            placeBomb = true;
     }
 
     @Override

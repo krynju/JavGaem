@@ -37,7 +37,7 @@ public class Model {
         }
     }
 
-    public void render(Graphics g) {
+    public static void render(Graphics g) {
         Field.render(g);
         Iterator iter = objectList.iterator();
 
