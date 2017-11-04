@@ -1,8 +1,5 @@
 package com.krynju;
 
-import java.awt.*;
-import java.awt.image.BufferStrategy;
-
 public class Game {
     public static final int WIDTH = 696;
     public static final int HEIGHT = 557;
@@ -12,7 +9,6 @@ public class Game {
     private static final int FRAMERATE = 60;
     private static final String title = "Gaem";
 
-    private boolean running = false;
 
     private static View view;
     private static Controller controller;
@@ -21,9 +17,8 @@ public class Game {
 
     public static void main(String[] args) {
         model = new Model();
-
         controller = new Controller(model);
-        view = new View(model);
+        view = new View(model,controller.getKeyboardInput());
     }
 
 

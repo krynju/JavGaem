@@ -1,22 +1,17 @@
 package com.krynju;
 
-
 import com.krynju.enums.Direction;
-
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
-
 public class KeyboardInput extends KeyAdapter {
-    private static boolean upInQueue = false;
-    private static boolean downInQueue = false;
-    private static boolean leftInQueue = false;
-    private static boolean rightInQueue = false;
-    private static boolean placeBomb = false;
-
-    public static LinkedList<Direction> queuedKeys = new LinkedList<Direction>();
-
+    public LinkedList<Direction> queuedKeys = new LinkedList<Direction>();
+    private boolean upInQueue = false;
+    private boolean downInQueue = false;
+    private boolean leftInQueue = false;
+    private boolean rightInQueue = false;
+    private boolean placeBomb = false;
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -45,8 +40,10 @@ public class KeyboardInput extends KeyAdapter {
                 rightInQueue = true;
             }
         }
-        if (key == KeyEvent.VK_SPACE)
+        if (key == KeyEvent.VK_SPACE) {
             placeBomb = true;
+        }
+
     }
 
     @Override
@@ -68,8 +65,13 @@ public class KeyboardInput extends KeyAdapter {
             queuedKeys.remove(Direction.right);
             rightInQueue = false;
         }
-
     }
 
+    public boolean isPlaceBomb() {
+        return placeBomb;
+    }
 
+    public void setPlaceBomb(boolean placeBomb) {
+        this.placeBomb = placeBomb;
+    }
 }

@@ -1,8 +1,6 @@
 package com.krynju.modules;
 
 import com.krynju.enums.Direction;
-import com.krynju.KeyboardInput;
-import com.krynju.Model;
 import com.krynju.enums.ObjectID;
 
 import java.awt.Color;
@@ -16,14 +14,19 @@ public class Player extends GameObject {
     private boolean atDestination = true;   //Flag if not moving and standing on the rightInQueue spot
     private int destinationX;               //PLAYER's x destination cord
     private int destinationY;               //PLAYER's y destination cord
-
+    private Bomb bomb;
     private Direction movementDirection = Direction.none;   //Movements direction
 
-    public Player(int x, int y, double xVel, double yVel) {
+    public Player(int x, int y, double xVel, double yVel, Bomb bomb) {
         super(x, y, xVel, yVel);
         destinationX = assignedTile.getX();
         destinationY = assignedTile.getY();
         ID = ObjectID.player;
+        this.bomb = bomb;
+    }
+
+    public boolean isAtDestination() {
+        return atDestination;
     }
 
     private void goTo(Direction direction, int destination) {
@@ -73,14 +76,9 @@ public class Player extends GameObject {
         assignedTile.setPlayerOnTile(true);     //new tile
     }
 
-
-    private void move(Direction direction) {
+    public void move(Direction direction) throws UnableToMove {
         int destination;
-        try {
-            destination = Field.getDestination(tileCordX, tileCordY, direction);
-        } catch (Exception e) {
-            return; // if not possible to move
-        }
+        destination = Field.getDestination(tileCordX, tileCordY, direction);
         goTo(direction, destination);
     }
 
@@ -109,16 +107,7 @@ public class Player extends GameObject {
             }
         }
 
-        Direction direction;
-        try {
-            direction = KeyboardInput.queuedKeys.getLast();
-        } catch (Exception e) {
-            return;
-        }
 
-        /*Basic movement - object not moving and key pressed*/
-        if (atDestination && direction != Direction.none)
-            move(direction);
     }
 
     public void render(Graphics g) {
@@ -134,23 +123,23 @@ public class Player extends GameObject {
     }
 
     public void placeBomb(){
-        if(Model.bomb.isBombSet())
+        if(bomb.isBombSet())
             return;
         else if(atDestination || (abs(x - destinationX) < 30))
-            Model.bomb.setAt(tileCordX,tileCordY);
+            bomb.setAt(tileCordX,tileCordY);
         else{
             switch(movementDirection){
                 case up:
-                    Model.bomb.setAt(tileCordX,tileCordY+1);
+                    bomb.setAt(tileCordX,tileCordY+1);
                     break;
                 case down:
-                    Model.bomb.setAt(tileCordX,tileCordY-1);
+                    bomb.setAt(tileCordX,tileCordY-1);
                     break;
                 case left:
-                    Model.bomb.setAt(tileCordX+1,tileCordY);
+                    bomb.setAt(tileCordX+1,tileCordY);
                     break;
                 case right:
-                    Model.bomb.setAt(tileCordX-1,tileCordY);
+                    bomb.setAt(tileCordX-1,tileCordY);
                     break;
             }
         }

@@ -35,9 +35,7 @@ public class Field {
             return false;
         if (tileField[x][y].isBombed())
             return false;
-        if (x < 0 || y < 0 || x > tileCount - 1 || y > tileCount - 1)
-            return false;
-        return true;
+        return x >= 0 && y >= 0 && x <= tileCount - 1 && y <= tileCount - 1;
     }
 
     public static int getDestination(int x, int y, Direction direction) throws UnableToMove {

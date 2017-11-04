@@ -1,11 +1,14 @@
 package com.krynju;
 
+import com.krynju.modules.Field;
+import com.krynju.modules.GameObject;
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.*;
 
-public class View extends Canvas implements Runnable{
+public class View extends Canvas implements Runnable {
     public static final int WIDTH = 696;
     public static final int HEIGHT = 557;
     public static final int GAME_WIDTH = WIDTH - 56;
@@ -18,13 +21,13 @@ public class View extends Canvas implements Runnable{
     private Thread thread;
     private Model model;
 
-    public View(Model model) {
+    public View(Model model, KeyboardInput keyboardInput) {
         this.model = model;
 
         JFrame frame = new JFrame(title);
-        frame.setPreferredSize(new Dimension(WIDTH,HEIGHT));
-        frame.setMaximumSize(new Dimension(WIDTH,HEIGHT));
-        frame.setMinimumSize(new Dimension(WIDTH,HEIGHT));
+        frame.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        frame.setMaximumSize(new Dimension(WIDTH, HEIGHT));
+        frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
@@ -33,7 +36,7 @@ public class View extends Canvas implements Runnable{
         frame.setVisible(true);
         frame.setFocusable(true);
 
-        this.addKeyListener(new KeyboardInput());
+        this.addKeyListener(keyboardInput);
         this.start();
     }
 
@@ -71,6 +74,7 @@ public class View extends Canvas implements Runnable{
         stop();
 
     }
+
     synchronized void stop() {
         try {
             thread.join();
@@ -79,20 +83,23 @@ public class View extends Canvas implements Runnable{
             e.printStackTrace();
         }
     }
+
     private void render() {
         BufferStrategy bs = this.getBufferStrategy();
         if (bs == null) {
             createBufferStrategy(3);
             return;
         }
-
         Graphics g = bs.getDrawGraphics();
 
         /*background*/
         g.setColor(Color.white);
         g.fillRect(0, 0, WIDTH, HEIGHT);
 
-        model.render(g);
+        Field.render(g);    //render the field
+        for (GameObject obj : model.objectList) {//render the gameobjects
+            obj.render(g);
+        }
 
         g.dispose();
         bs.show();

@@ -5,15 +5,12 @@ import java.awt.Graphics;
 
 public class Bomb extends GameObject {
     private static final int tickingTime = 2;
-
     private boolean bombSet = false;
-
     private boolean bombTicking = false;
     private double timeElapsed = 0;
 
-
     public Bomb(int x, int y) {
-        super(x, y,0, 0);
+        super(x, y, 0, 0);
     }
 
     @Override
@@ -48,42 +45,42 @@ public class Bomb extends GameObject {
         bombTicking = true;
     }
 
-    private void boom(){
+    private void boom() {
         bombTicking = false;
         bombSet = false;
         assignedTile.setBombed(false);
         timeElapsed = 0;
 
-        if(checkTile(tileCordX,tileCordY)){
+        if (checkTile(tileCordX, tileCordY)) {
             System.out.println("FKING CUNT");
         }
-        if(checkTile(tileCordX,tileCordY+1)){
+        if (checkTile(tileCordX, tileCordY + 1)) {
             System.out.println("chuj");
         }
-        if(checkTile(tileCordX,tileCordY-1)){
+        if (checkTile(tileCordX, tileCordY - 1)) {
             System.out.println("chuj");
         }
-        if(checkTile(tileCordX+1,tileCordY)){
+        if (checkTile(tileCordX + 1, tileCordY)) {
             System.out.println("chuj");
         }
-        if(checkTile(tileCordX-1,tileCordY)){
+        if (checkTile(tileCordX - 1, tileCordY)) {
             System.out.println("chuj");
         }
 
     }
 
-    private boolean checkTile(int x, int y){
+    private boolean checkTile(int x, int y) {
         /*fetch the tile at cords*/
         Tile tile;
-        try{
-            tile = Field.getTileRef(x,y);
-        }catch(Exception e){
+        try {
+            tile = Field.getTileRef(x, y);
+        } catch (Exception e) {
             return false;
         }
 
         /*destroy walls if possible*/
-        if(tile.isWallOnTile()){
-            if(tile.getWall().isDestroyable())
+        if (tile.isWallOnTile()) {
+            if (tile.getWall().isDestroyable())
                 tile.getWall().destroy();
         }
 
