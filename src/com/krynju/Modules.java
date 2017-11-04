@@ -12,7 +12,7 @@ public class Modules {
     public static Field field;
     public static Player PlayerObject;
     public static Bomb bomb;
-    private LinkedList<GameObject> objectList = new LinkedList<GameObject>();
+    private static LinkedList<GameObject> objectList = new LinkedList<GameObject>();
 
     public Modules() {
         field = new Field();
@@ -25,11 +25,11 @@ public class Modules {
         PlayerObject = obj;
     }
 
-    public void addObject(GameObject obj) {
+    public static void addObject(GameObject obj) {
         objectList.add(obj);
     }
 
-    public void removeObject(GameObject obj) {
+    public static void removeObject(GameObject obj) {
         objectList.remove(obj);
     }
 

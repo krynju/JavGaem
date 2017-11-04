@@ -16,8 +16,7 @@ public class Player extends GameObject {
     private boolean atDestination = true;   //Flag if not moving and standing on the rightInQueue spot
     private int destinationX;               //PLAYER's x destination cord
     private int destinationY;               //PLAYER's y destination cord
-    private int queuedDestination;          //PLAYER's queued destination cord
-    private Direction queuedDirection = Direction.none;     //Queued movements direction
+
     private Direction movementDirection = Direction.none;   //Movements direction
 
     public Player(int x, int y, double xVel, double yVel) {
@@ -69,38 +68,11 @@ public class Player extends GameObject {
 
         atDestination = true;
 
-//        System.out.println(tileCordX);
-//        System.out.println(tileCordY);
-//        System.out.println(assignedTile.getX());
-//        System.out.println(assignedTile.getY());
-//        System.out.println(destinationX);
-//        System.out.println(destinationY);
-
-        assignedTile= Field.getTileRef(tileCordX,tileCordY);
-
-        /*Check if there's a queued movement and if the queued movement key is still pressed downInQueue*/
-//        Direction direction;
-//        try {
-//            direction = KeyboardInput.queuedKeys.getLast();
-//        } catch (Exception e) {
-//            return;
-//        }
-//        if (queuedDirection != Direction.none && queuedDirection == direction) {
-//            goTo(queuedDirection, queuedDestination);
-//            queuedDirection = Direction.none;
-//        }
+        assignedTile.setPlayerOnTile(false);    //old tile
+        assignedTile= Field.getTileRef(tileCordX,tileCordY);    //get new tile
+        assignedTile.setPlayerOnTile(true);     //new tile
     }
 
-    private void queueMovement(Direction keyPressedDown) {
-        int destination;
-        try {
-            destination = Field.getDestination(tileCordX, tileCordY, keyPressedDown);
-        } catch (Exception e) {
-            return;
-        }
-        queuedDestination = destination;
-        queuedDirection = keyPressedDown;
-    }
 
     private void move(Direction direction) {
         int destination;
@@ -116,6 +88,7 @@ public class Player extends GameObject {
         /*Calculating new position*/
         x += xVel * timeElapsedSeconds;
         y += yVel * timeElapsedSeconds;
+
         /*Stop check - if at or further than destination do a stop */
         if(!atDestination) {
             switch (movementDirection) {
@@ -146,27 +119,6 @@ public class Player extends GameObject {
         /*Basic movement - object not moving and key pressed*/
         if (atDestination && direction != Direction.none)
             move(direction);
-//        /*Queued movement - object moving and close to destination, key pressed*/
-//        if (!atDestination && direction != Direction.none) {
-//            int d = 20;
-//            switch (movementDirection) {
-//                case up:
-//                    if (y <= destinationY - d) queueMovement(direction);
-//                    break;
-//                case down:
-//                    if (y >= destinationY - d) queueMovement(direction);
-//                    break;
-//                case left:
-//                    if (x <= destinationX - d) queueMovement(direction);
-//                    break;
-//                case right:
-//                    if (x >= destinationX - d) queueMovement(direction);
-//                    break;
-//                case none:
-//                    break;
-//            }
-//
-//        }
     }
 
     public void render(Graphics g) {

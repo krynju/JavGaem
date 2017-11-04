@@ -29,7 +29,7 @@ public class Field {
     }
 
     private static boolean possibleToMove(int x,int y){
-        if(tileField[x][y].isBlocked())
+        if(tileField[x][y].isWallOnTile())
             return false;
         if(tileField[x][y].isBombed())
             return false;

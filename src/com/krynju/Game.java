@@ -1,8 +1,6 @@
 package com.krynju;
 
-import com.krynju.modules.Bomb;
-import com.krynju.modules.DestroyableWall;
-import com.krynju.modules.Player;
+import com.krynju.modules.*;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -34,6 +32,7 @@ public class Game extends Canvas implements Runnable {
         modules.addPlayer(new Player(0, 0, 0, 0));
         modules.addObject(new DestroyableWall(1, 1));
         modules.addObject(new DestroyableWall(2, 2));
+        modules.addObject(new NormalWall(4,4));
     }
 
     public static void main(String[] args) {
@@ -65,11 +64,9 @@ public class Game extends Canvas implements Runnable {
         while (running) {
             double now = System.nanoTime();
 
-            //if ((now - lastTick) > 1000000000 / TICKRATE) {
             tick((now - lastTick) / 1000000000);
             lastTick = now;
             ticks++;
-            //}
 
             if ((now - lastFrame) > 1000000000 / FRAMERATE) {
                 render();

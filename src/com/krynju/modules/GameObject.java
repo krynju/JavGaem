@@ -27,4 +27,6 @@ public abstract class GameObject {
 
     public abstract void tick(double timeElapsedSeconds);
     public abstract void render(Graphics g);
+
+
 }
