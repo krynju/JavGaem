@@ -1,5 +1,7 @@
 package com.krynju.modules;
 
+import com.krynju.Game;
+
 import java.awt.*;
 
 public class NormalWall extends Wall{
@@ -17,7 +19,7 @@ public class NormalWall extends Wall{
     @Override
     public void render(Graphics g) {
 
-            g.setColor(Color.DARK_GRAY);
+            g.setColor(Game.normalWallColor);
                     g.fillRect((int) x, (int) y, 40, 40);
 
     }

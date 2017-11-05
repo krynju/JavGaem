@@ -96,11 +96,7 @@ public class Controller extends Canvas implements Runnable {
                 }
             }
         }
-
-
     }
-
-
     public KeyboardInput getKeyboardInput() {
         return keyboardInput;
     }

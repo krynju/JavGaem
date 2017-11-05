@@ -1,5 +1,7 @@
 package com.krynju.modules;
 
+import com.krynju.Game;
+
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -17,7 +19,7 @@ public class DestroyableWall extends Wall {
     @Override
     public void render(Graphics g) {
         if(!destroyed) {
-            g.setColor(Color.orange);
+            g.setColor(Game.destroyableWallColor);
             g.fillRect((int) x, (int) y, 40, 40);
         }
     }

@@ -9,13 +9,7 @@ import java.awt.image.BufferStrategy;
 import javax.swing.*;
 
 public class View extends Canvas implements Runnable {
-    public static final int WIDTH = 696;
-    public static final int HEIGHT = 557;
-    public static final int GAME_WIDTH = WIDTH - 56;
-    public static final int GAME_HEIGHT = HEIGHT - 77;
-    private static final int TICKRATE = 100;
     private static final int FRAMERATE = 60;
-    private static final String title = "Gaem";
     private boolean running = false;
 
     private Thread thread;
@@ -24,10 +18,10 @@ public class View extends Canvas implements Runnable {
     public View(Model model, KeyboardInput keyboardInput) {
         this.model = model;
 
-        JFrame frame = new JFrame(title);
-        frame.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        frame.setMaximumSize(new Dimension(WIDTH, HEIGHT));
-        frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        JFrame frame = new JFrame(Game.title);
+        frame.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
+        frame.setMaximumSize(new Dimension(Game.WIDTH, Game.HEIGHT));
+        frame.setMinimumSize(new Dimension(Game.WIDTH, Game.HEIGHT));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
@@ -51,18 +45,13 @@ public class View extends Canvas implements Runnable {
     public void run() {
         this.requestFocus();
         double lastFrame = System.nanoTime();
-        double lastTick = System.nanoTime();
-        long timer = System.currentTimeMillis();
-        int frames = 0;
-        int ticks = 0;
 
         while (running) {
             double now = System.nanoTime();
 
-            if ((now - lastFrame) > 1000000000 / FRAMERATE) {
+            if ((now - lastFrame) > 1000000000 / Game.FRAMERATE) {
                 render();
                 lastFrame = now;
-                frames++;
             }
 
             try {
@@ -94,7 +83,7 @@ public class View extends Canvas implements Runnable {
 
         /*background*/
         g.setColor(Color.white);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
+        g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 
         Field.render(g);    //render the field
         for (GameObject obj : model.objectList) {//render the gameobjects

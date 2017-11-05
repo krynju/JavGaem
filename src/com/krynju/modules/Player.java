@@ -1,5 +1,6 @@
 package com.krynju.modules;
 
+import com.krynju.Game;
 import com.krynju.enums.Direction;
 import com.krynju.enums.ObjectID;
 
@@ -9,7 +10,6 @@ import java.awt.Graphics;
 import static java.lang.Math.abs;
 
 public class Player extends GameObject {
-
     private static final int SPEED = 120;   //PLAYER's speed
     private boolean atDestination = true;   //Flag if not moving and standing on the rightInQueue spot
     private int destinationX;               //PLAYER's x destination cord
@@ -111,7 +111,7 @@ public class Player extends GameObject {
     }
 
     public void render(Graphics g) {
-        g.setColor(Color.pink);
+        g.setColor(Game.playerColor);
         g.fillRect((int) x, (int) y, 40, 40);
 //        /*image input*/
 //        BufferedImage img = null;

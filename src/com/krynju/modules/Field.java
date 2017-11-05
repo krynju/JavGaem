@@ -1,26 +1,32 @@
 package com.krynju.modules;
 
+import com.krynju.Game;
 import com.krynju.enums.Direction;
 
 import java.awt.Color;
 import java.awt.Graphics;
 
 public class Field {
-    public static final int fieldsX = 100;
-    public static final int fieldsY = 100;
-    public static final int tileSize = 40;
-    public static final int tileCount = 6;
-    public static final int fieldsSizeX = tileSize * (tileCount - 1);
-    public static final int fieldsSizeY = tileSize * (tileCount - 1);
-
+    private static final int fieldsX = 140;
+    private static final int fieldsY = 60;
+    private static final int tileSize = 40;
+    public static final int tileCountX = 13;
+    public static final int tileCountY = 11;
+    private static final int fieldsSizeX = tileSize * (tileCountX - 1);
+    private static final int fieldsSizeY = tileSize * (tileCountY - 1);
 
     private static Tile[][] tileField;
 
+    /*y\x 0 1 2 3 4 5 6
+    *    0
+    *    1   7x5
+    *    2   field[6][4]
+    *    3   field[x][y]
+    *    4                  */
     public Field() {
-        int k = tileCount;
-        tileField = new Tile[k][k];
-        for (int i = 0; i < k; i++) {
-            for (int j = 0; j < k; j++) {
+        tileField = new Tile[tileCountX][tileCountY];
+        for (int i = 0; i < tileCountX; i++) {
+            for (int j = 0; j < tileCountY; j++) {
                 tileField[i][j] = new Tile(fieldsX + i * tileSize, fieldsY + j * tileSize);
             }
         }
@@ -35,7 +41,7 @@ public class Field {
             return false;
         if (tileField[x][y].isBombed())
             return false;
-        return x >= 0 && y >= 0 && x <= tileCount - 1 && y <= tileCount - 1;
+        return x >= 0 && y >= 0 && x <= tileCountX - 1 && y <= tileCountY - 1;
     }
 
     public static int getDestination(int x, int y, Direction direction) throws UnableToMove {
@@ -63,10 +69,9 @@ public class Field {
         }
         return 0;
     }
-    public static void tick(double timeElapsedSeconds){}
 
     public static void render(Graphics g) {
-        g.setColor(Color.LIGHT_GRAY);
+        g.setColor(Game.fieldColor);
         g.fillRect(fieldsX, fieldsY, fieldsSizeX + tileSize, fieldsSizeY + tileSize);
     }
 }
