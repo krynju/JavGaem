@@ -9,9 +9,11 @@ public class Controller extends Canvas implements Runnable {
     private Thread thread;
     private Model model;
     private KeyboardInput keyboardInput;
+    private AI ai;
     private boolean running = false;
 
     public Controller(Model model) {
+        this.ai = new AI(model);
         this.model = model;
         this.keyboardInput = new KeyboardInput();
         this.start();
@@ -57,6 +59,13 @@ public class Controller extends Canvas implements Runnable {
     }
 
     private void analyzeKeyboardInput() {
+        Direction dir;
+
+        if(/*keyboardInput.isShit() && */model.enemy.isAtDestination()) {
+            ai.test();
+            keyboardInput.setShit(false);
+        }
+
         /*Bomb placement*/
         if (keyboardInput.isPlaceBomb()) {
             model.player.placeBomb();
@@ -92,11 +101,12 @@ public class Controller extends Canvas implements Runnable {
 
                 try {
                     model.player.move(directionLastMinus);  //if everything is ok then try to move in the direction2
-                } catch (Exception ignored2) {
-                }
+                } catch (Exception ignored2) {}
             }
         }
     }
+
+
     public KeyboardInput getKeyboardInput() {
         return keyboardInput;
     }

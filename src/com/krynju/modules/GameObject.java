@@ -10,6 +10,15 @@ public abstract class GameObject {
     protected double y;
     protected double xVel;
     protected double yVel;
+
+    public int getTileCordX() {
+        return tileCordX;
+    }
+
+    public int getTileCordY() {
+        return tileCordY;
+    }
+
     protected int tileCordX;
     protected int tileCordY;
     protected Tile assignedTile;

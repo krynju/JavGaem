@@ -12,17 +12,19 @@ import static java.lang.Math.abs;
 public class Player extends GameObject {
     private static final int SPEED = 120;   //PLAYER's speed
     private boolean atDestination = true;   //Flag if not moving and standing on the rightInQueue spot
-    private int destinationX;               //PLAYER's x destination cord
-    private int destinationY;               //PLAYER's y destination cord
-    private Bomb bomb;
+    public int destinationX;               //PLAYER's x destination cord
+    public int destinationY;               //PLAYER's y destination cord
+    public Bomb bomb;
     private Direction movementDirection = Direction.none;   //Movements direction
+    private Color color;
 
-    public Player(int x, int y, double xVel, double yVel, Bomb bomb) {
-        super(x, y, xVel, yVel);
+    public Player(int x, int y,Color color, Bomb bomb) {
+        super(x, y, 0, 0);
         destinationX = assignedTile.getX();
         destinationY = assignedTile.getY();
         ID = ObjectID.player;
         this.bomb = bomb;
+        this.color = color;
     }
 
     public boolean isAtDestination() {
@@ -32,6 +34,7 @@ public class Player extends GameObject {
     private void goTo(Direction direction, int destination) {
         atDestination = false;
         movementDirection = direction;
+
 
         switch (direction) {
             case up:
@@ -60,6 +63,10 @@ public class Player extends GameObject {
                 break;
         }
 
+        assignedTile.setPlayerOnTile(false);    //old tile
+        assignedTile= Field.getTileRef(tileCordX,tileCordY);    //get new tile
+        assignedTile.setPlayerOnTile(true);     //new tile
+
     }
 
     private void arrivedAtDestination() { // to mozna podobno lambda
@@ -71,9 +78,7 @@ public class Player extends GameObject {
 
         atDestination = true;
 
-        assignedTile.setPlayerOnTile(false);    //old tile
-        assignedTile= Field.getTileRef(tileCordX,tileCordY);    //get new tile
-        assignedTile.setPlayerOnTile(true);     //new tile
+
     }
 
     public void move(Direction direction) throws UnableToMove {
@@ -111,7 +116,7 @@ public class Player extends GameObject {
     }
 
     public void render(Graphics g) {
-        g.setColor(Game.playerColor);
+        g.setColor(color);
         g.fillRect((int) x, (int) y, 40, 40);
 //        /*image input*/
 //        BufferedImage img = null;

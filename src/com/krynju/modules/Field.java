@@ -41,6 +41,8 @@ public class Field {
             return false;
         if (tileField[x][y].isBombed())
             return false;
+        if (tileField[x][y].isPlayerOnTile())
+            return false;
         return x >= 0 && y >= 0 && x <= tileCountX - 1 && y <= tileCountY - 1;
     }
 

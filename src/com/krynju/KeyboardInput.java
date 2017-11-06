@@ -13,6 +13,16 @@ public class KeyboardInput extends KeyAdapter {
     private boolean rightInQueue = false;
     private boolean placeBomb = false;
 
+    public boolean isShit() {
+        return shit;
+    }
+
+    public void setShit(boolean shit) {
+        this.shit = shit;
+    }
+
+    private boolean shit = false;
+
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
@@ -42,6 +52,10 @@ public class KeyboardInput extends KeyAdapter {
         }
         if (key == KeyEvent.VK_SPACE) {
             placeBomb = true;
+        }
+
+        if(key==KeyEvent.VK_G){
+            shit = true;
         }
 
     }

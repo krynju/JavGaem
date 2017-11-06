@@ -9,8 +9,8 @@ public class Bomb extends GameObject {
     private boolean bombTicking = false;
     private double timeElapsed = 0;
 
-    public Bomb(int x, int y) {
-        super(x, y, 0, 0);
+    public Bomb() {
+        super(0, 0, 0, 0);
     }
 
     @Override
