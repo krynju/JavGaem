@@ -61,9 +61,10 @@ public class Controller extends Canvas implements Runnable {
     private void analyzeKeyboardInput() {
         Direction dir;
 
-        if(/*keyboardInput.isShit() && */model.enemy.isAtDestination()) {
-            ai.test();
-            keyboardInput.setShit(false);
+        if(model.enemy.isAtDestination()) {
+            try {
+                model.enemy.move(ai.test());
+            } catch(Exception e){}
         }
 
         /*Bomb placement*/

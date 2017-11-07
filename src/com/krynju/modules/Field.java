@@ -68,6 +68,8 @@ public class Field {
                     return tileField[x + 1][y].getX();
                 else
                     throw new UnableToMove("un");
+            case none:
+                throw new UnableToMove("fk");
         }
         return 0;
     }
