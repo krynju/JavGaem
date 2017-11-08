@@ -3,7 +3,6 @@ package com.krynju;
 import com.krynju.enums.Direction;
 import com.krynju.modules.Field;
 import com.krynju.modules.Tile;
-
 import java.util.LinkedList;
 
 class Node {
@@ -13,13 +12,13 @@ class Node {
         this.c = c;
     }
 
-    int x, y, c;
+    int x;  //node's x cord
+    int y;  //node's y cord
+    int c;  //node's step
 }
 
 public class AI {
     private Model model;
-    private boolean flag = false;
-
 
     AI(Model model) {
         this.model = model;
@@ -119,8 +118,6 @@ public class AI {
             return(Direction.up);
         else
             return(Direction.none);
-    
-
 
 //        for (Node e : list) {
 //            System.out.print(e.x);
