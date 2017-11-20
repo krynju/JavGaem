@@ -29,12 +29,22 @@ public class Bomb extends GameObject {
         else
             g.setColor(Color.black);
         g.drawOval((int) x, (int) y, 40, 40);
+        g.drawRect((int) x-40, (int) y, 40, 40);
+        g.drawRect((int) x+40, (int) y, 40, 40);
+        g.drawRect((int) x, (int) y-40, 40, 40);
+        g.drawRect((int) x, (int) y+40, 40, 40);
+        g.drawRect((int) x-80, (int) y, 40, 40);
+        g.drawRect((int) x+80, (int) y, 40, 40);
+        g.drawRect((int) x, (int) y-80, 40, 40);
+        g.drawRect((int) x, (int) y+80, 40, 40);
+
     }
 
     public void setAt(int x, int y) {
-        assignedTile.setBombed(false);          //unbomb the old tile
         assignedTile = Field.getTileRef(x, y);  //get new tileref
         assignedTile.setBombed(true);           //bomb the new tile
+
+        setDangerZone(x,y,true);
 
         this.x = assignedTile.getX();           //get new x/y positions
         this.y = assignedTile.getY();
@@ -45,11 +55,42 @@ public class Bomb extends GameObject {
         bombTicking = true;
     }
 
+    private void setDangerZone(int x, int y,boolean mss) {
+        try{
+            Field.getTileRef(x,y-1).setBombDanger(mss);
+        }catch(Exception e){}
+        try{
+            Field.getTileRef(x,y+1).setBombDanger(mss);
+        }catch(Exception e){}
+        try{
+            Field.getTileRef(x-1,y).setBombDanger(mss);
+        }catch(Exception e){}
+        try{
+            Field.getTileRef(x+1,y).setBombDanger(mss);
+        }catch(Exception e){}
+        try{
+            Field.getTileRef(x,y-2).setBombDanger(mss);
+        }catch(Exception e){}
+        try{
+            Field.getTileRef(x,y+2).setBombDanger(mss);
+        }catch(Exception e){}
+        try{
+            Field.getTileRef(x-2,y).setBombDanger(mss);
+        }catch(Exception e){}
+        try{
+            Field.getTileRef(x+2,y).setBombDanger(mss);
+        }catch(Exception e){}
+    }
+
     private void boom() {
         bombTicking = false;
         bombSet = false;
         assignedTile.setBombed(false);
         timeElapsed = 0;
+
+
+        setDangerZone(tileCordX, tileCordY,false);
+
 
         if (checkTile(tileCordX, tileCordY)) {
             System.out.println("FKING CUNT");

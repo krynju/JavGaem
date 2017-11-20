@@ -25,6 +25,7 @@ public class Player extends GameObject {
         ID = ObjectID.player;
         this.bomb = bomb;
         this.color = color;
+        assignedTile.setPlayerOnTile(true);
     }
 
     public boolean isAtDestination() {
@@ -61,6 +62,8 @@ public class Player extends GameObject {
                 destinationX = destination;
                 tileCordX++;
                 break;
+            case none:
+                return;
         }
 
         assignedTile.setPlayerOnTile(false);    //old tile
@@ -82,8 +85,7 @@ public class Player extends GameObject {
     }
 
     public void move(Direction direction) throws UnableToMove {
-        int destination;
-        destination = Field.getDestination(tileCordX, tileCordY, direction);
+        int destination = Field.getDestination(tileCordX, tileCordY, direction);
         goTo(direction, destination);
     }
 

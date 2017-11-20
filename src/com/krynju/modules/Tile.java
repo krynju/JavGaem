@@ -8,6 +8,7 @@ public class Tile {
     private boolean wallOnTile = false;
     private boolean bombed = false;
     private boolean playerOnTile = false;
+    private boolean bombDanger = false;
     public Tile(int x, int y) {
         this.x = x;
         this.y = y;
@@ -51,5 +52,13 @@ public class Tile {
 
     public void setWallOnTile(boolean wallOnTile) {
         this.wallOnTile = wallOnTile;
+    }
+
+    public void setBombDanger(boolean bombDanger) {
+        this.bombDanger = bombDanger;
+    }
+
+    public boolean isBombDanger() {
+        return bombDanger;
     }
 }

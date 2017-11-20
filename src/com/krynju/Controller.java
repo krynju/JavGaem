@@ -63,7 +63,7 @@ public class Controller extends Canvas implements Runnable {
 
         if(model.enemy.isAtDestination()) {
             try {
-                model.enemy.move(ai.test());
+                model.enemy.move(ai.runOneStep());
             } catch(Exception e){}
         }
 
