@@ -7,22 +7,22 @@ import com.krynju.modules.Tile;
 import java.util.LinkedList;
 
 class Node {
-    Node(int x, int y, int c) {
+    Node(int x, int y, int step) {
         this.x = x;
         this.y = y;
-        this.c = c;
+        this.step = step;
     }
 
-    Node(int x, int y, int c, Node prev) {
+    Node(int x, int y, int step, Node prev) {
         this.x = x;
         this.y = y;
-        this.c = c;
+        this.step = step;
         this.previousNode = prev;
     }
 
     int x;  //node's x cord
     int y;  //node's y cord
-    int c;  //node's step
+    int step;  //node's step
     int destroyableWallsCount = 0;
     Node previousNode;
 }
@@ -34,10 +34,12 @@ public class AI {
         this.model = model;
     }
 
-    Direction runOneStep() {
+    Direction mainAIAlgorithm() {
+
+        /*bomb range check - if positive then run away from the bomb*/
         Tile enemyTile = Field.getTileRef(model.enemy.getTileCordX(), model.enemy.getTileCordY());
         if (enemyTile.isBombDanger() || enemyTile.isBombed())
-            return runFromBomb();
+            return runAwayFromBombAlgorithm();
 
         /*initialising the lists used for the path finding algorithm*/
         LinkedList<Node> list = new LinkedList<Node>();
@@ -54,10 +56,10 @@ public class AI {
             *   A       O - the i-th node
             * A O A     A - adjacent nodes that are getting added
             *   A           they also have the step counter greater than the O node */
-            tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).c + 1));
-            tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).c + 1));
-            tempList.add(new Node(list.get(i).x + 1, list.get(i).y, list.get(i).c + 1));
-            tempList.add(new Node(list.get(i).x, list.get(i).y - 1, list.get(i).c + 1));
+            tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).step + 1));
+            tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).step + 1));
+            tempList.add(new Node(list.get(i).x + 1, list.get(i).y, list.get(i).step + 1));
+            tempList.add(new Node(list.get(i).x, list.get(i).y - 1, list.get(i).step + 1));
 
             for (Node node : tempList) {
                 Tile tile;  //temp tile
@@ -78,7 +80,7 @@ public class AI {
                 /*checking for nodes in the list that have
                 * the same cords and an equal or lesser step*/
                 for (Node O : list) {
-                    if (O.x == node.x && O.y == node.y && O.c <= node.c) {
+                    if (O.x == node.x && O.y == node.y && O.step <= node.step) {
                         removeList.add(node);
                         break;
                     }
@@ -94,37 +96,39 @@ public class AI {
             for (Node T : tempList) {
                 /*if a node like this is found then a flag is set that is going to break the loop*/
                 if (T.x == model.enemy.getTileCordX() && T.y == model.enemy.getTileCordY()) {
-                    if (T.c == 1) {
-                        trySettingBomb();
-                        /*set a bomb if possible*/
-                        System.out.println("found the target");
+                    /*SET A BOMB IF POSSIBLE*/
+                    if (T.step == 1) {
+                        setBombAlgorithm();
+                        System.out.println("found the target - setting the bomb");
                     }
                     break pathloop;
                 }
             }
 
-            /*out of moves*/
+            /*if all possible paths have been discovered
+            * then run an algorithm that's
+            * trying to get as close to the target as possible*/
             if (list.getLast() == list.get(i) && tempList.isEmpty())
-                return getClose();      //run the algorithm without bomb checking to get close to the target
+                return getCloseToTargetAlgorithm();
+
 
 
             removeList.clear(); //clear the lists before the next iteration
             tempList.clear();
-
             i++;                //increment the step counter
         }
 
         /*fetch the node that found the tile with the controlled object
         * and return a direction in which the controlled object should move */
-
         Node node = list.get(i);
         Tile tile = Field.getTileRef(node.x, node.y);
-        if (tile.isBombDanger() || tile.isBombed())
+        if (tile.isBombDanger() || tile.isBombed())     //also check if the move is dangerous
             return (Direction.none);
+
         return chooseDirection(node.x, node.y);
     }
 
-    private void trySettingBomb() {
+    private void setBombAlgorithm() {
         /*initialising the lists used for the path finding algorithm*/
         LinkedList<Node> list = new LinkedList<Node>();
         LinkedList<Node> tempList = new LinkedList<Node>();
@@ -136,10 +140,10 @@ public class AI {
         int i = 0;  //step counter
         pathloop:
         while (true) {
-            tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).c + 1, list.get(i)));
-            tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).c + 1, list.get(i)));
-            tempList.add(new Node(list.get(i).x + 1, list.get(i).y, list.get(i).c + 1, list.get(i)));
-            tempList.add(new Node(list.get(i).x, list.get(i).y - 1, list.get(i).c + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).step + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).step + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x + 1, list.get(i).y, list.get(i).step + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x, list.get(i).y - 1, list.get(i).step + 1, list.get(i)));
 
             for (Node node : tempList) {
                 Tile tile;  //temp tile
@@ -160,7 +164,7 @@ public class AI {
                 /*checking for nodes in the list that have
                 * the same cords and an equal or lesser step*/
                 for (Node O : list) {
-                    if (O.x == node.x && O.y == node.y && O.c <= node.c) {
+                    if (O.x == node.x && O.y == node.y && O.step <= node.step) {
                         removeList.add(node);
                         break;
                     }
@@ -188,7 +192,7 @@ public class AI {
         }
     }
 
-    private Direction runFromBomb() {
+    private Direction runAwayFromBombAlgorithm() {
         /*initialising the lists used for the path finding algorithm*/
         LinkedList<Node> list = new LinkedList<Node>();
         LinkedList<Node> tempList = new LinkedList<Node>();
@@ -204,10 +208,10 @@ public class AI {
             *   A       O - the i-th node
             * A O A     A - adjacent nodes that are getting added
             *   A           they also have the step counter greater than the O node */
-            tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).c + 1, list.get(i)));
-            tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).c + 1, list.get(i)));
-            tempList.add(new Node(list.get(i).x + 1, list.get(i).y, list.get(i).c + 1, list.get(i)));
-            tempList.add(new Node(list.get(i).x, list.get(i).y - 1, list.get(i).c + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).step + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).step + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x + 1, list.get(i).y, list.get(i).step + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x, list.get(i).y - 1, list.get(i).step + 1, list.get(i)));
 
             for (Node node : tempList) {
                 Tile tile;  //temp tile
@@ -228,7 +232,7 @@ public class AI {
                 /*checking for nodes in the list that have
                 * the same cords and an equal or lesser step*/
                 for (Node O : list) {
-                    if (O.x == node.x && O.y == node.y && O.c <= node.c) {
+                    if (O.x == node.x && O.y == node.y && O.step <= node.step) {
                         removeList.add(node);
                         break;
                     }
@@ -261,7 +265,7 @@ public class AI {
         return chooseDirection(node.x, node.y);
     }
 
-    private Direction getClose() {
+    private Direction getCloseToTargetAlgorithm() {
         LinkedList<Node> list = new LinkedList<Node>();
         LinkedList<Node> tempList = new LinkedList<Node>();
         LinkedList<Node> removeList = new LinkedList<Node>();
@@ -272,10 +276,10 @@ public class AI {
 
         pathloop:
         while (true) {
-            tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).c + 1));
-            tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).c + 1));
-            tempList.add(new Node(list.get(i).x + 1, list.get(i).y, list.get(i).c + 1));
-            tempList.add(new Node(list.get(i).x, list.get(i).y - 1, list.get(i).c + 1));
+            tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).step + 1));
+            tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).step + 1));
+            tempList.add(new Node(list.get(i).x + 1, list.get(i).y, list.get(i).step + 1));
+            tempList.add(new Node(list.get(i).x, list.get(i).y - 1, list.get(i).step + 1));
 
             for (Node node : tempList) {
                 Tile tile;
@@ -295,7 +299,7 @@ public class AI {
                 /*checking for nodes in the list that have
                 * the same cords and an equal or lesser step*/
                 for (Node O : list) {
-                    if (O.x == node.x && O.y == node.y && O.c <= node.c) {
+                    if (O.x == node.x && O.y == node.y && O.step <= node.step) {
                         removeList.add(node);
                         break;
                     }
@@ -310,16 +314,16 @@ public class AI {
             for (Node T : tempList) {
                 /*if a node like this is found then a flag is set that is going to break the loop*/
                 if (T.x == model.enemy.getTileCordX() && T.y == model.enemy.getTileCordY()) {
-                    System.out.println("found the target in the getClose");
+                    System.out.println("found the target in the getCloseToTargetAlgorithm");
                     break pathloop;
                 }
             }
 
             /*out of moves*/
             if (list.getLast() == list.get(i) && tempList.isEmpty()) {
-                System.out.println("out of moves in getClose");
+                System.out.println("out of moves in getCloseToTargetAlgorithm");
 
-                return findBreakableWalls();
+                return findBreakableWallsAlgorithm();
             }
 
             removeList.clear(); //clear the lists before the next iteration
@@ -337,7 +341,7 @@ public class AI {
         return chooseDirection(node.x, node.y);
     }
 
-    private Direction findBreakableWalls() {
+    private Direction findBreakableWallsAlgorithm() {
         if(model.enemy.bomb.isBombSet())
             return Direction.none;
 
@@ -352,10 +356,10 @@ public class AI {
         int i = 0;  //step counter
         pathloop:
         while (true) {
-            tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).c + 1, list.get(i)));
-            tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).c + 1, list.get(i)));
-            tempList.add(new Node(list.get(i).x + 1, list.get(i).y, list.get(i).c + 1, list.get(i)));
-            tempList.add(new Node(list.get(i).x, list.get(i).y - 1, list.get(i).c + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).step + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).step + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x + 1, list.get(i).y, list.get(i).step + 1, list.get(i)));
+            tempList.add(new Node(list.get(i).x, list.get(i).y - 1, list.get(i).step + 1, list.get(i)));
 
             for (Node node : tempList) {
                 Tile tile;  //temp tile
@@ -380,7 +384,7 @@ public class AI {
                 /*checking for nodes in the list that have
                 * the same cords and an equal or lesser step*/
                 for (Node O : list) {
-                    if (O.x == node.x && O.y == node.y && O.c <= node.c) {
+                    if (O.x == node.x && O.y == node.y && O.step <= node.step) {
                         removeList.add(node);
                         break;
                     }
@@ -405,7 +409,7 @@ public class AI {
         }
 
         if(maxNode == list.getFirst()){
-            trySettingBomb();
+            setBombAlgorithm();
             return Direction.none;
         }
 
