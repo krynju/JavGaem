@@ -78,10 +78,7 @@ public class Player extends GameObject {
         x = destinationX;
         xVel = 0;
         yVel = 0;
-
         atDestination = true;
-
-
     }
 
     public void move(Direction direction) throws UnableToMove {

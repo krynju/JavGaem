@@ -4,6 +4,7 @@ import com.krynju.modules.Wall;
 
 public class Tile {
     private Wall wall;
+    public boolean destroyable = false;
     private int x, y;
     private boolean wallOnTile = false;
     private boolean bombed = false;

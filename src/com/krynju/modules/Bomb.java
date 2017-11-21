@@ -33,10 +33,10 @@ public class Bomb extends GameObject {
         g.drawRect((int) x+40, (int) y, 40, 40);
         g.drawRect((int) x, (int) y-40, 40, 40);
         g.drawRect((int) x, (int) y+40, 40, 40);
-        g.drawRect((int) x-80, (int) y, 40, 40);
-        g.drawRect((int) x+80, (int) y, 40, 40);
-        g.drawRect((int) x, (int) y-80, 40, 40);
-        g.drawRect((int) x, (int) y+80, 40, 40);
+//        g.drawRect((int) x-80, (int) y, 40, 40);
+//        g.drawRect((int) x+80, (int) y, 40, 40);
+//        g.drawRect((int) x, (int) y-80, 40, 40);
+//        g.drawRect((int) x, (int) y+80, 40, 40);
 
     }
 
@@ -68,18 +68,18 @@ public class Bomb extends GameObject {
         try{
             Field.getTileRef(x+1,y).setBombDanger(mss);
         }catch(Exception e){}
-        try{
-            Field.getTileRef(x,y-2).setBombDanger(mss);
-        }catch(Exception e){}
-        try{
-            Field.getTileRef(x,y+2).setBombDanger(mss);
-        }catch(Exception e){}
-        try{
-            Field.getTileRef(x-2,y).setBombDanger(mss);
-        }catch(Exception e){}
-        try{
-            Field.getTileRef(x+2,y).setBombDanger(mss);
-        }catch(Exception e){}
+//        try{
+//            Field.getTileRef(x,y-2).setBombDanger(mss);
+//        }catch(Exception e){}
+//        try{
+//            Field.getTileRef(x,y+2).setBombDanger(mss);
+//        }catch(Exception e){}
+//        try{
+//            Field.getTileRef(x-2,y).setBombDanger(mss);
+//        }catch(Exception e){}
+//        try{
+//            Field.getTileRef(x+2,y).setBombDanger(mss);
+//        }catch(Exception e){}
     }
 
     private void boom() {
