@@ -13,6 +13,8 @@ class Node {
         this.step = step;
     }
 
+
+
     Node(int x, int y, int step, Node prev) {
         this.x = x;
         this.y = y;
@@ -29,12 +31,15 @@ class Node {
 
 public class AI {
     private Model model;
+    public boolean delayFlag = false;
+    public boolean setDelay;
 
     AI(Model model) {
         this.model = model;
     }
 
     Direction mainAIAlgorithm() {
+
 
         /*bomb range check - if positive then run away from the bomb*/
         Tile enemyTile = Field.getTileRef(model.enemy.getTileCordX(), model.enemy.getTileCordY());
@@ -86,9 +91,10 @@ public class AI {
                     }
                 }
             }
-
-            tempList.removeAll(removeList); //remove nodes from the tempList that got flagged as "to be removed"
-            list.addAll(tempList);          //adds the remaining nodes to the list
+            /*remove nodes from the tempList that got flagged as "to be removed"*/
+            tempList.removeAll(removeList);
+            /*adds the remaining nodes to the list*/
+            list.addAll(tempList);
     
 
             /*checking if the tempList contained a node that has the same cords
@@ -105,17 +111,26 @@ public class AI {
                 }
             }
 
-            /*if all possible paths have been discovered
-            * then run an algorithm that's
-            * trying to get as close to the target as possible*/
+            /*if all possible paths have been discovered and the controlled object hasn't been found
+            * then run an algorithm that's trying to get as close to the target as possible*/
             if (list.getLast() == list.get(i) && tempList.isEmpty())
+                /*getCloseToTargetAlgorithm can set a delayFlag, which happens when the ai player
+                * stands next to a bombsite and is waiting for the bomb to explode
+                * the delay happens AFTER the bomb explodes*/
                 return getCloseToTargetAlgorithm();
-
-
 
             removeList.clear(); //clear the lists before the next iteration
             tempList.clear();
             i++;                //increment the step counter
+        }
+
+        /*checking the delayFlag, if the program got to this point then the bomb has already exploded
+        * it is the moment when the delay starts, setting the setDelay flag will freeze the ai players
+        * movement for the set delay time*/
+        if(delayFlag){
+            delayFlag = false;
+            setDelay = true;
+            return Direction.none;
         }
 
         /*fetch the node that found the tile with the controlled object
@@ -125,6 +140,7 @@ public class AI {
         if (tile.isBombDanger() || tile.isBombed())     //also check if the move is dangerous
             return (Direction.none);
 
+        /*process the chosen node*/
         return chooseDirection(node.x, node.y);
     }
 
@@ -314,15 +330,14 @@ public class AI {
             for (Node T : tempList) {
                 /*if a node like this is found then a flag is set that is going to break the loop*/
                 if (T.x == model.enemy.getTileCordX() && T.y == model.enemy.getTileCordY()) {
-                    System.out.println("found the target in the getCloseToTargetAlgorithm");
+                    //System.out.println("found the target in the getCloseToTargetAlgorithm");
                     break pathloop;
                 }
             }
 
-            /*out of moves*/
+            /*out of moves - break walls*/
             if (list.getLast() == list.get(i) && tempList.isEmpty()) {
-                System.out.println("out of moves in getCloseToTargetAlgorithm");
-
+                //System.out.println("out of moves in getCloseToTargetAlgorithm");
                 return findBreakableWallsAlgorithm();
             }
 
@@ -335,8 +350,11 @@ public class AI {
         /*movement direction decisions*/
         Node node = list.get(i);
         Tile tile = Field.getTileRef(node.x, node.y);
-        if (tile.isBombDanger() || tile.isBombed())
+        if (tile.isBombDanger() || tile.isBombed()) {
+            System.out.println("setting the delayFlag");
+            delayFlag = true;
             return (Direction.none);
+        }
 
         return chooseDirection(node.x, node.y);
     }

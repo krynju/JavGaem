@@ -39,6 +39,8 @@ public class Controller extends Canvas implements Runnable {
         while (running) {
             double now = System.nanoTime();
 
+            aishit((now-lastTick)/ 1000000000);
+
             analyzeKeyboardInput();
             tick((now - lastTick) / 1000000000);
 
@@ -52,20 +54,43 @@ public class Controller extends Canvas implements Runnable {
         stop();
     }
 
+    double now = System.nanoTime();
+    boolean tempflag = false;
+    double time = 0;
+    private void aishit(double v) {
+        if(ai.setDelay){
+            time += v;
+            //System.out.println(time);
+            if(time > 0.5){
+                if(model.enemy.isAtDestination()) {
+                    ai.setDelay = false;
+                    try {
+                        model.enemy.move(ai.mainAIAlgorithm());
+                    } catch (Exception unableToMove) {}
+
+                    time = 0;
+                }
+            }
+        }
+        else{
+            if(model.enemy.isAtDestination()) {
+                try {
+                    model.enemy.move(ai.mainAIAlgorithm());
+                } catch (Exception unableToMove) {
+                    //unableToMove.printStackTrace();
+                }
+            }
+        }
+    }
+
     private void tick(double timeElapsedSeconds) {
         for (GameObject obj : model.objectList) {
             obj.tick(timeElapsedSeconds);
         }
     }
 
-    private void analyzeKeyboardInput() {
-        Direction dir;
 
-        if(model.enemy.isAtDestination()) {
-            try {
-                model.enemy.move(ai.mainAIAlgorithm());
-            } catch(Exception e){}
-        }
+    private void analyzeKeyboardInput() {
 
         /*Bomb placement*/
         if (keyboardInput.isPlaceBomb()) {

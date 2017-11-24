@@ -5,20 +5,10 @@ import com.krynju.enums.ObjectID;
 import java.awt.Graphics;
 
 public abstract class GameObject {
-    protected ObjectID ID;
     protected double x;
     protected double y;
     protected double xVel;
     protected double yVel;
-
-    public int getTileCordX() {
-        return tileCordX;
-    }
-
-    public int getTileCordY() {
-        return tileCordY;
-    }
-
     protected int tileCordX;
     protected int tileCordY;
     protected Tile assignedTile;
@@ -33,7 +23,16 @@ public abstract class GameObject {
         tileCordY = y;
     }
 
+    public int getTileCordX() {
+        return tileCordX;
+    }
+
+    public int getTileCordY() {
+        return tileCordY;
+    }
+
     public abstract void tick(double timeElapsedSeconds);
+
     public abstract void render(Graphics g);
 
 

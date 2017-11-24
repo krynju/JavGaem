@@ -1,6 +1,5 @@
 package com.krynju.modules;
 
-import com.krynju.Game;
 import com.krynju.enums.Direction;
 import com.krynju.enums.ObjectID;
 
@@ -10,19 +9,21 @@ import java.awt.Graphics;
 import static java.lang.Math.abs;
 
 public class Player extends GameObject {
+    protected ObjectID ID;
     private static final int SPEED = 120;   //PLAYER's speed
     private boolean atDestination = true;   //Flag if not moving and standing on the rightInQueue spot
     public int destinationX;               //PLAYER's x destination cord
     public int destinationY;               //PLAYER's y destination cord
     public Bomb bomb;
+
     private Direction movementDirection = Direction.none;   //Movements direction
     private Color color;
 
-    public Player(int x, int y,Color color, Bomb bomb) {
+    public Player(ObjectID id, int x, int y, Color color, Bomb bomb) {
         super(x, y, 0, 0);
         destinationX = assignedTile.getX();
         destinationY = assignedTile.getY();
-        ID = ObjectID.player;
+        ID = id;
         this.bomb = bomb;
         this.color = color;
         assignedTile.setPlayerOnTile(true);
@@ -129,7 +130,9 @@ public class Player extends GameObject {
     public void placeBomb(){
         if(bomb.isBombSet())
             return;
-        else if(atDestination || (abs(x - destinationX) < 30))
+        else if(atDestination)
+            bomb.setAt(tileCordX,tileCordY);
+        else if((abs(x - destinationX) < 30) && (abs(y - destinationY) < 30))
             bomb.setAt(tileCordX,tileCordY);
         else{
             switch(movementDirection){
