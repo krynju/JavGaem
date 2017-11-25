@@ -1,42 +1,31 @@
-package com.krynju;
+package com.krynju.ai;
 
+import com.krynju.Model;
 import com.krynju.enums.Direction;
 import com.krynju.modules.Field;
 import com.krynju.modules.Tile;
 
 import java.util.LinkedList;
 
-class Node {
-    Node(int x, int y, int step) {
-        this.x = x;
-        this.y = y;
-        this.step = step;
-    }
-
-    Node(int x, int y, int step, Node prev) {
-        this.x = x;
-        this.y = y;
-        this.step = step;
-        this.previousNode = prev;
-    }
-
-    int x;  //node's x cord
-    int y;  //node's y cord
-    int step;  //node's step
-    int destroyableWallsCount = 0;
-    Node previousNode;
-}
-
 public class AI {
+    private boolean delayFlag = false;
+    private boolean delay = false;
     private Model model;
-    public boolean delayFlag = false;
-    public boolean setDelay;
 
-    AI(Model model) {
+    public AI(Model model) {
         this.model = model;
     }
 
-    Direction mainAIAlgorithm() {
+
+    public boolean isDelay() {
+        return delay;
+    }
+
+    public void setDelay(boolean delay) {
+        this.delay = delay;
+    }
+
+    public Direction mainAIAlgorithm() {
         /*bomb range check - if positive then run away from the bomb*/
         Tile enemyTile = Field.getTileRef(model.enemy.getTileCordX(), model.enemy.getTileCordY());
         if (enemyTile.isBombDanger() || enemyTile.isBombed())
@@ -121,11 +110,11 @@ public class AI {
         }
 
         /*checking the delayFlag, if the program got to this point then the bomb has already exploded
-        * it is the moment when the delay starts, setting the setDelay flag will freeze the ai players
+        * it is the moment when the delay starts, setting the delay flag will freeze the ai players
         * movement for the set delay delayTimeCounter*/
         if (delayFlag) {
             delayFlag = false;
-            setDelay = true;
+            delay = true;
             return Direction.none;
         }
 
@@ -142,15 +131,15 @@ public class AI {
 
     private void setBombAlgorithm() {
         /*initialising the lists used for the path finding algorithm*/
-        LinkedList<Node> list = new LinkedList<Node>();
-        LinkedList<Node> tempList = new LinkedList<Node>();
-        LinkedList<Node> removeList = new LinkedList<Node>();
+        LinkedList<Node> list = new LinkedList<>();
+        LinkedList<Node> tempList = new LinkedList<>();
+        LinkedList<Node> removeList = new LinkedList<>();
 
         /*adding the first node which is the players cords with a step 0*/
         list.add(new Node(model.enemy.getTileCordX(), model.enemy.getTileCordY(), 0, null));
 
         int i = 0;  //step counter
-        pathloop:
+        pathLoop:
         while (true) {
             tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).step + 1, list.get(i)));
             tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).step + 1, list.get(i)));
@@ -194,7 +183,7 @@ public class AI {
                     Tile tempTile = Field.getTileRef(T.x, T.y);
                     if (!tempTile.isBombDanger() && !tempTile.isBombed()) {//FIXED THIS SHIT, MISSING ISBOMBED
                         model.enemy.placeBomb();
-                        break pathloop;
+                        break pathLoop;
                     }
                 }
             }
@@ -206,9 +195,9 @@ public class AI {
 
     private Direction runAwayFromBombAlgorithm() {
         /*initialising the lists used for the path finding algorithm*/
-        LinkedList<Node> list = new LinkedList<Node>();
-        LinkedList<Node> tempList = new LinkedList<Node>();
-        LinkedList<Node> removeList = new LinkedList<Node>();
+        LinkedList<Node> list = new LinkedList<>();
+        LinkedList<Node> tempList = new LinkedList<>();
+        LinkedList<Node> removeList = new LinkedList<>();
 
         /*adding the first node which is the players cords with a step 0*/
         list.add(new Node(model.enemy.getTileCordX(), model.enemy.getTileCordY(), 0, null));
@@ -278,9 +267,9 @@ public class AI {
     }
 
     private Direction getCloseToTargetAlgorithm() {
-        LinkedList<Node> list = new LinkedList<Node>();
-        LinkedList<Node> tempList = new LinkedList<Node>();
-        LinkedList<Node> removeList = new LinkedList<Node>();
+        LinkedList<Node> list = new LinkedList<>();
+        LinkedList<Node> tempList = new LinkedList<>();
+        LinkedList<Node> removeList = new LinkedList<>();
 
         list.add(new Node(model.player.getTileCordX(), model.player.getTileCordY(), 0));
 
@@ -360,15 +349,15 @@ public class AI {
             return Direction.none;
 
         /*initialising the lists used for the path finding algorithm*/
-        LinkedList<Node> list = new LinkedList<Node>();
-        LinkedList<Node> tempList = new LinkedList<Node>();
-        LinkedList<Node> removeList = new LinkedList<Node>();
+        LinkedList<Node> list = new LinkedList<>();
+        LinkedList<Node> tempList = new LinkedList<>();
+        LinkedList<Node> removeList = new LinkedList<>();
 
         /*adding the first node which is the players cords with a step 0*/
         list.add(new Node(model.enemy.getTileCordX(), model.enemy.getTileCordY(), 0, null));
 
         int i = 0;  //step counter
-        pathloop:
+
         while (true) {
             tempList.add(new Node(list.get(i).x, list.get(i).y + 1, list.get(i).step + 1, list.get(i)));
             tempList.add(new Node(list.get(i).x - 1, list.get(i).y, list.get(i).step + 1, list.get(i)));

@@ -1,5 +1,6 @@
 package com.krynju;
 
+import com.krynju.ai.AI;
 import com.krynju.enums.Direction;
 import com.krynju.modules.GameObject;
 
@@ -39,7 +40,7 @@ public class Controller extends Canvas implements Runnable {
         while (running) {
             double now = System.nanoTime();
 
-            aishit((now-lastTick)/ 1000000000);
+            AIDecisions((now-lastTick)/ 1000000000);
 
             analyzeKeyboardInput();
             tick((now - lastTick) / 1000000000);
@@ -56,8 +57,8 @@ public class Controller extends Canvas implements Runnable {
 
 
     private double delayTimeCounter = 0;
-    private void aishit(double timeElapsedSeconds) {
-        if(ai.setDelay){
+    private void AIDecisions(double timeElapsedSeconds) {
+        if(ai.isDelay()){
             delayTimeCounter += timeElapsedSeconds;
             if(delayTimeCounter > Game.AI_DELAY){
                 if(model.enemy.isAtDestination()) {
@@ -65,7 +66,7 @@ public class Controller extends Canvas implements Runnable {
                         model.enemy.move(ai.mainAIAlgorithm());
                     } catch (Exception unableToMove) {}
                     delayTimeCounter = 0;
-                    ai.setDelay = false;
+                    ai.setDelay(false);
                 }
             }
         }

@@ -1,7 +1,5 @@
 package com.krynju.modules;
 
-import com.krynju.modules.Wall;
-
 public class Tile {
     private Wall wall;
     public boolean destroyable = false;

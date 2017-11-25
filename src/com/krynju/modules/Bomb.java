@@ -66,9 +66,7 @@ public class Bomb extends GameObject {
                 continue;
             }
             dangerTiles.add(temp);
-            if (temp.isWallOnTile()) {
-                continue;
-            } else {
+            if (!temp.isWallOnTile()) {
                 try {
                     temp = Field.getTileRef(i[2], i[3]);
                 } catch (Exception e) {
@@ -86,6 +84,7 @@ public class Bomb extends GameObject {
     }
 
     private void boom() {
+        dangerTiles.addFirst(assignedTile);
         for (Tile tile : dangerTiles) {
             if (tile.isWallOnTile())
                 tile.getWall().destroy();
