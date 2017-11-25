@@ -8,7 +8,7 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.*;
 
-public class View extends Canvas implements Runnable {
+public class View extends JPanel implements Runnable {
     private static final int FRAMERATE = 60;
     private boolean running = false;
 
@@ -50,7 +50,7 @@ public class View extends Canvas implements Runnable {
             double now = System.nanoTime();
 
             if ((now - lastFrame) > 1000000000 / Game.FRAMERATE) {
-                render();
+                repaint();
                 lastFrame = now;
             }
 
@@ -73,25 +73,19 @@ public class View extends Canvas implements Runnable {
         }
     }
 
-    private void render() {
-        BufferStrategy bs = this.getBufferStrategy();
-        if (bs == null) {
-            createBufferStrategy(3);
-            return;
-        }
-        Graphics g = bs.getDrawGraphics();
-
+    public void paint(Graphics g) {
+        Graphics2D g2d = (Graphics2D)g;
         /*background*/
-        g.setColor(Color.white);
-        g.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
+        g2d.setColor(Color.white);
+        g2d.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 
         Field.render(g);    //render the field
         for (GameObject obj : model.objectList) {//render the gameobjects
-            obj.render(g);
+            obj.render(g2d);
         }
 
-        g.dispose();
-        bs.show();
+        g2d.dispose();
+
     }
 
 
