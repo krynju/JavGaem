@@ -4,7 +4,6 @@ import com.krynju.modules.Field;
 import com.krynju.modules.GameObject;
 
 import java.awt.*;
-import java.awt.image.BufferStrategy;
 
 import javax.swing.*;
 
@@ -19,13 +18,36 @@ public class View extends JPanel implements Runnable {
         this.model = model;
 
         JFrame frame = new JFrame(Game.title);
+        frame.setLocation(300,100);
         frame.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
         frame.setMaximumSize(new Dimension(Game.WIDTH, Game.HEIGHT));
         frame.setMinimumSize(new Dimension(Game.WIDTH, Game.HEIGHT));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
+        frame.setLayout(null);
         frame.add(this);
+        this.setBounds(140,60,520,440);
+        View v = this;
+
+        JButton button = new JButton();
+        button.addActionListener(e -> {
+            System.out.println("gay");
+            v.requestFocus();
+        });
+        frame.add(button);
+        button.setBounds(50,50,69,69);
+        button.setText("gay");
+
+        JButton button2 = new JButton();
+        button2.addActionListener(e -> {
+            System.out.println("gayers");
+            v.requestFocus();
+        });
+        frame.add(button2);
+        button2.setBounds(50,150,69,69);
+        button2.setText("gayers");
+
+
         frame.pack();
         frame.setVisible(true);
         frame.setFocusable(true);

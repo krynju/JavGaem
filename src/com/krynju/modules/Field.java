@@ -7,8 +7,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Field {
-    private static final int fieldsX = 140;
-    private static final int fieldsY = 60;
+    private static final int fieldsX = 0;
+    private static final int fieldsY = 0;
     private static final int tileSize = 40;
     public static final int tileCountX = 13;
     public static final int tileCountY = 11;

@@ -36,6 +36,7 @@ public class Controller extends Canvas implements Runnable {
     }
 
     public void run() {
+
         double lastTick = System.nanoTime();
         while (running) {
             double now = System.nanoTime();
