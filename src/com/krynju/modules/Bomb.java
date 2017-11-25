@@ -2,12 +2,14 @@ package com.krynju.modules;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.LinkedList;
 
 public class Bomb extends GameObject {
     private static final int tickingTime = 2;
     private boolean bombSet = false;
     private boolean bombTicking = false;
     private double timeElapsed = 0;
+    private LinkedList<Tile> dangerTiles = new LinkedList<>();
 
     public Bomb() {
         super(0, 0, 0, 0);
@@ -29,107 +31,76 @@ public class Bomb extends GameObject {
         else
             g.setColor(Color.black);
         g.drawOval((int) x, (int) y, 40, 40);
-        g.drawRect((int) x-40, (int) y, 40, 40);
-        g.drawRect((int) x+40, (int) y, 40, 40);
-        g.drawRect((int) x, (int) y-40, 40, 40);
-        g.drawRect((int) x, (int) y+40, 40, 40);
-        g.drawRect((int) x-80, (int) y, 40, 40);
-        g.drawRect((int) x+80, (int) y, 40, 40);
-        g.drawRect((int) x, (int) y-80, 40, 40);
-        g.drawRect((int) x, (int) y+80, 40, 40);
-
+        for (Tile tile : dangerTiles) {
+            if(!tile.isWallOnTile())
+                g.drawRect(tile.getX(), tile.getY(), 40, 40);
+        }
     }
 
     public void setAt(int x, int y) {
         assignedTile = Field.getTileRef(x, y);  //get new tileref
         assignedTile.setBombed(true);           //bomb the new tile
-
-        setDangerZone(x,y,true);
-
         this.x = assignedTile.getX();           //get new x/y positions
         this.y = assignedTile.getY();
         this.tileCordX = x;
         this.tileCordY = y;
-
         bombSet = true;
         bombTicking = true;
+        fetchingTilesAround(this.tileCordX, this.tileCordY);
+        setDangerZone(true);
     }
 
-    private void setDangerZone(int x, int y,boolean mss) {
-        try{
-            Field.getTileRef(x,y-1).setBombDanger(mss);
-        }catch(Exception e){}
-        try{
-            Field.getTileRef(x,y+1).setBombDanger(mss);
-        }catch(Exception e){}
-        try{
-            Field.getTileRef(x-1,y).setBombDanger(mss);
-        }catch(Exception e){}
-        try{
-            Field.getTileRef(x+1,y).setBombDanger(mss);
-        }catch(Exception e){}
-        try{
-            Field.getTileRef(x,y-2).setBombDanger(mss);
-        }catch(Exception e){}
-        try{
-            Field.getTileRef(x,y+2).setBombDanger(mss);
-        }catch(Exception e){}
-        try{
-            Field.getTileRef(x-2,y).setBombDanger(mss);
-        }catch(Exception e){}
-        try{
-            Field.getTileRef(x+2,y).setBombDanger(mss);
-        }catch(Exception e){}
+    private void fetchingTilesAround(int x, int y) {
+        int a[][] = new int[][]{
+                {x + 1, y, x + 2, y},
+                {x - 1, y, x - 2, y},
+                {x, y + 1, x, y + 2},
+                {x, y - 1, x, y - 2}
+        };
+        for (int i[], c = 0; c < 4; c++) {
+            i = a[c];
+            Tile temp;
+            try {
+                temp = Field.getTileRef(i[0], i[1]);
+            } catch (Exception e) {
+                continue;
+            }
+            dangerTiles.add(temp);
+            if (temp.isWallOnTile()) {
+                continue;
+            } else {
+                try {
+                    temp = Field.getTileRef(i[2], i[3]);
+                } catch (Exception e) {
+                    continue;
+                }
+                dangerTiles.add(temp);
+            }
+        }
+    }
+
+    private void setDangerZone(boolean state) {
+        for (Tile tile : dangerTiles) {
+            tile.setBombDanger(state);
+        }
     }
 
     private void boom() {
+        for (Tile tile : dangerTiles) {
+            if (tile.isWallOnTile())
+                tile.getWall().destroy();
+            if (tile.isPlayerOnTile())
+                System.out.println("die fggt");
+        }
         bombTicking = false;
         bombSet = false;
         assignedTile.setBombed(false);
         timeElapsed = 0;
-
-
-        setDangerZone(tileCordX, tileCordY,false);
-
-
-        if (checkTile(tileCordX, tileCordY)) {
-            System.out.println("FKING CUNT");
-        }
-        if (checkTile(tileCordX, tileCordY + 1)) {
-            System.out.println("chuj");
-        }
-        if (checkTile(tileCordX, tileCordY - 1)) {
-            System.out.println("chuj");
-        }
-        if (checkTile(tileCordX + 1, tileCordY)) {
-            System.out.println("chuj");
-        }
-        if (checkTile(tileCordX - 1, tileCordY)) {
-            System.out.println("chuj");
-        }
-
-    }
-
-    private boolean checkTile(int x, int y) {
-        /*fetch the tile at cords*/
-        Tile tile;
-        try {
-            tile = Field.getTileRef(x, y);
-        } catch (Exception e) {
-            return false;
-        }
-
-        /*destroy walls if possible*/
-        if (tile.isWallOnTile()) {
-            if (tile.getWall().isDestroyable())
-                tile.getWall().destroy();
-        }
-
-        return tile.isPlayerOnTile();
+        setDangerZone(false);
+        dangerTiles.clear();
     }
 
     public boolean isBombSet() {
         return bombSet;
     }
-
 }

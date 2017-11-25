@@ -54,21 +54,18 @@ public class Controller extends Canvas implements Runnable {
         stop();
     }
 
-    double now = System.nanoTime();
-    boolean tempflag = false;
-    double time = 0;
-    private void aishit(double v) {
+
+    private double delayTimeCounter = 0;
+    private void aishit(double timeElapsedSeconds) {
         if(ai.setDelay){
-            time += v;
-            //System.out.println(time);
-            if(time > 0.5){
+            delayTimeCounter += timeElapsedSeconds;
+            if(delayTimeCounter > Game.AI_DELAY){
                 if(model.enemy.isAtDestination()) {
-                    ai.setDelay = false;
                     try {
                         model.enemy.move(ai.mainAIAlgorithm());
                     } catch (Exception unableToMove) {}
-
-                    time = 0;
+                    delayTimeCounter = 0;
+                    ai.setDelay = false;
                 }
             }
         }
@@ -76,9 +73,7 @@ public class Controller extends Canvas implements Runnable {
             if(model.enemy.isAtDestination()) {
                 try {
                     model.enemy.move(ai.mainAIAlgorithm());
-                } catch (Exception unableToMove) {
-                    //unableToMove.printStackTrace();
-                }
+                } catch (Exception unableToMove) {}
             }
         }
     }

@@ -10,6 +10,7 @@ public class Game {
     public static final int TICKRATE = 100;
     public static final int FRAMERATE = 60;
     public static final String title = "Gaem";
+    public static final double AI_DELAY = 0.5;
 
     public static final Color playerColor = new Color(69,255,184);
     public static final Color normalWallColor = new Color(0,0,0);

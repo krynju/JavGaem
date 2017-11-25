@@ -13,8 +13,6 @@ class Node {
         this.step = step;
     }
 
-
-
     Node(int x, int y, int step, Node prev) {
         this.x = x;
         this.y = y;
@@ -39,17 +37,15 @@ public class AI {
     }
 
     Direction mainAIAlgorithm() {
-
-
         /*bomb range check - if positive then run away from the bomb*/
         Tile enemyTile = Field.getTileRef(model.enemy.getTileCordX(), model.enemy.getTileCordY());
         if (enemyTile.isBombDanger() || enemyTile.isBombed())
             return runAwayFromBombAlgorithm();
 
         /*initialising the lists used for the path finding algorithm*/
-        LinkedList<Node> list = new LinkedList<Node>();
-        LinkedList<Node> tempList = new LinkedList<Node>();
-        LinkedList<Node> removeList = new LinkedList<Node>();
+        LinkedList<Node> list = new LinkedList<>();
+        LinkedList<Node> tempList = new LinkedList<>();
+        LinkedList<Node> removeList = new LinkedList<>();
 
         /*adding the first node which is the players cords with a step 0*/
         list.add(new Node(model.player.getTileCordX(), model.player.getTileCordY(), 0));
@@ -126,8 +122,8 @@ public class AI {
 
         /*checking the delayFlag, if the program got to this point then the bomb has already exploded
         * it is the moment when the delay starts, setting the setDelay flag will freeze the ai players
-        * movement for the set delay time*/
-        if(delayFlag){
+        * movement for the set delay delayTimeCounter*/
+        if (delayFlag) {
             delayFlag = false;
             setDelay = true;
             return Direction.none;
@@ -303,11 +299,11 @@ public class AI {
                 if (node.x < 0 || node.y < 0 || node.x >= Field.tileCountX || node.y >= Field.tileCountY) {
                     removeList.add(node);  //if not then add the node to the removeList and continue
                     continue;           //items in the removeList are going to be later removed from the tempList
-                }else{
-                    tile =  Field.getTileRef(node.x,node.y);
+                } else {
+                    tile = Field.getTileRef(node.x, node.y);
                 }
 
-                if(tile.isWallOnTile()) {
+                if (tile.isWallOnTile()) {
                     removeList.add(node);
                     continue;
                 }
@@ -360,7 +356,7 @@ public class AI {
     }
 
     private Direction findBreakableWallsAlgorithm() {
-        if(model.enemy.bomb.isBombSet())
+        if (model.enemy.bomb.isBombSet())
             return Direction.none;
 
         /*initialising the lists used for the path finding algorithm*/
@@ -389,7 +385,7 @@ public class AI {
                 } else
                     tile = Field.getTileRef(node.x, node.y);  //if it's a valid tile then get its reference
 
-                if(tile.destroyable){
+                if (tile.destroyable) {
                     list.get(i).destroyableWallsCount++;
                 }
 
@@ -413,7 +409,7 @@ public class AI {
             list.addAll(tempList);          //adds the remaining nodes to the list
 
             if (list.getLast() == list.get(i) && tempList.isEmpty()) {
-                break ;
+                break;
             }
             removeList.clear(); //clear the lists before the next iteration
             tempList.clear();
@@ -421,12 +417,12 @@ public class AI {
         }
 
         Node maxNode = list.getFirst();
-        for(Node n:list){
-            if(n.destroyableWallsCount > maxNode.destroyableWallsCount)
+        for (Node n : list) {
+            if (n.destroyableWallsCount > maxNode.destroyableWallsCount)
                 maxNode = n;
         }
 
-        if(maxNode == list.getFirst()){
+        if (maxNode == list.getFirst()) {
             setBombAlgorithm();
             return Direction.none;
         }
@@ -434,7 +430,7 @@ public class AI {
         /*using saved previousNodes to find the node with step = 1*/
         while (maxNode.previousNode != list.getFirst())
             maxNode = maxNode.previousNode;
-        return chooseDirection(maxNode.x,maxNode.y);
+        return chooseDirection(maxNode.x, maxNode.y);
 
     }
 
