@@ -1,5 +1,6 @@
 package com.krynju.modules;
 
+import com.krynju.Game;
 import com.krynju.enums.Direction;
 import com.krynju.enums.ObjectID;
 
@@ -10,7 +11,7 @@ import static java.lang.Math.abs;
 
 public class Player extends GameObject {
     protected ObjectID ID;
-    private static final int SPEED = 120;   //PLAYER's speed
+    private int SPEED = 120;   //PLAYER's speed
     private boolean atDestination = true;   //Flag if not moving and standing on the rightInQueue spot
     public int destinationX;               //PLAYER's x destination cord
     public int destinationY;               //PLAYER's y destination cord
@@ -34,9 +35,12 @@ public class Player extends GameObject {
     }
 
     private void goTo(Direction direction, int destination) {
+        /*for the dankest difficulty, speed increase*/
+        if (ID == ObjectID.enemy) {
+            SPEED = Game.AI_SPEED;
+        }
         atDestination = false;
         movementDirection = direction;
-
 
         switch (direction) {
             case up:
@@ -68,7 +72,7 @@ public class Player extends GameObject {
         }
 
         assignedTile.setPlayerOnTile(false);    //old tile
-        assignedTile= Field.getTileRef(tileCordX,tileCordY);    //get new tile
+        assignedTile = Field.getTileRef(tileCordX, tileCordY);    //get new tile
         assignedTile.setPlayerOnTile(true);     //new tile
 
     }
@@ -93,7 +97,7 @@ public class Player extends GameObject {
         y += yVel * timeElapsedSeconds;
 
         /*Stop check - if at or further than destination do a stop */
-        if(!atDestination) {
+        if (!atDestination) {
             switch (movementDirection) {
                 case up:
                     if (y <= destinationY - 0.5) arrivedAtDestination();
@@ -127,26 +131,26 @@ public class Player extends GameObject {
 //        g.drawImage(img,(int)x,(int)y,null);
     }
 
-    public void placeBomb(){
-        if(bomb.isBombSet())
+    public void placeBomb() {
+        if (bomb.isBombSet())
             return;
-        else if(atDestination)
-            bomb.setAt(tileCordX,tileCordY);
-        else if((abs(x - destinationX) < 30) && (abs(y - destinationY) < 30))
-            bomb.setAt(tileCordX,tileCordY);
-        else{
-            switch(movementDirection){
+        else if (atDestination)
+            bomb.setAt(tileCordX, tileCordY);
+        else if ((abs(x - destinationX) < 30) && (abs(y - destinationY) < 30))
+            bomb.setAt(tileCordX, tileCordY);
+        else {
+            switch (movementDirection) {
                 case up:
-                    bomb.setAt(tileCordX,tileCordY+1);
+                    bomb.setAt(tileCordX, tileCordY + 1);
                     break;
                 case down:
-                    bomb.setAt(tileCordX,tileCordY-1);
+                    bomb.setAt(tileCordX, tileCordY - 1);
                     break;
                 case left:
-                    bomb.setAt(tileCordX+1,tileCordY);
+                    bomb.setAt(tileCordX + 1, tileCordY);
                     break;
                 case right:
-                    bomb.setAt(tileCordX-1,tileCordY);
+                    bomb.setAt(tileCordX - 1, tileCordY);
                     break;
             }
         }

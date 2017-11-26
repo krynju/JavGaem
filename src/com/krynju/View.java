@@ -1,11 +1,16 @@
 package com.krynju;
 
+import com.krynju.enums.Direction;
 import com.krynju.modules.Field;
 import com.krynju.modules.GameObject;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 public class View extends JPanel implements Runnable {
     private static final int FRAMERATE = 60;
@@ -18,7 +23,7 @@ public class View extends JPanel implements Runnable {
         this.model = model;
 
         JFrame frame = new JFrame(Game.title);
-        frame.setLocation(300,100);
+        frame.setLocation(300, 100);
         frame.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
         frame.setMaximumSize(new Dimension(Game.WIDTH, Game.HEIGHT));
         frame.setMinimumSize(new Dimension(Game.WIDTH, Game.HEIGHT));
@@ -26,34 +31,88 @@ public class View extends JPanel implements Runnable {
         frame.setResizable(false);
         frame.setLayout(null);
         frame.add(this);
-        this.setBounds(140,60,520,440);
-        View v = this;
+        this.setBounds(140, 60, 520, 440);
+        View gamePanel = this;
 
         /*pause button*/
         JButton button = new JButton();
         button.addActionListener(e -> {
-            System.out.println("gay");
+            //System.out.println("gay");
             Game.setPause(!Game.isPaused());
-            v.requestFocus();
+            if(!Game.isPaused())
+                button.setText("Pause");
+            else
+                button.setText("Play");
+            gamePanel.requestFocus();
         });
         frame.add(button);
-        button.setBounds(10,50,100,20);
-        button.setText("gaypause");
+        button.setBounds(10, 60, 120, 40);
+        button.setText("Play");
 
 
         /*reset button button*/
         JButton button2 = new JButton();
         button2.addActionListener(e -> {
-            System.out.println("gayers");
+            //System.out.println("gayers");
             Game.setPause(true);
             model.reload();
             Game.setPause(false);
-            v.requestFocus();
+            gamePanel.requestFocus();
         });
         frame.add(button2);
-        button2.setBounds(50,150,69,69);
-        button2.setText("gayers");
+        button2.setBounds(10, 110, 120, 40);
+        button2.setText("Reset");
 
+        /*jlabel for difficulty*/
+        JLabel label = new JLabel();
+        label.setText("Difficulty setting:");
+        label.setBounds(10,160,120,20);
+        frame.add(label);
+
+        /*combobox difficulty*/
+        String[] abd = {"normie", "dank","dankest","most dankest"};
+        JComboBox comboBox = new JComboBox(abd);
+        frame.add(comboBox);
+        comboBox.setBounds(10, 180, 120, 30);
+        comboBox.addActionListener(e -> {
+            int s = ((JComboBox)e.getSource()).getSelectedIndex();
+            switch (s) {
+                case 0: //normal
+                    Game.AI_SPEED = 120;
+                    Game.AI_DELAY = 0.5;
+                    break;
+                case 1: //dank420
+                    Game.AI_SPEED = 240;
+                    Game.AI_DELAY = 0.5;
+                    break;
+                case 2:
+                    Game.AI_SPEED = 120;
+                    Game.AI_DELAY = 0;
+                    break;
+                case 3:
+                    Game.AI_SPEED = 240;
+                    Game.AI_DELAY = 0;
+                    break;
+            }
+            gamePanel.requestFocus();
+        });
+
+        comboBox.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                gamePanel.requestFocus();
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+
+            }
+        });
 
         frame.pack();
         frame.setVisible(true);
@@ -103,7 +162,7 @@ public class View extends JPanel implements Runnable {
     }
 
     public void paint(Graphics g) {
-        Graphics2D g2d = (Graphics2D)g;
+        Graphics2D g2d = (Graphics2D) g;
         /*background*/
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
