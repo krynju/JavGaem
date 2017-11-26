@@ -39,12 +39,23 @@ public class Controller extends Canvas implements Runnable {
 
         double lastTick = System.nanoTime();
         while (running) {
-            double now = System.nanoTime();
+            /*game pausing functionality*/
+            if(Game.isPaused()){
+                try{
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                lastTick = System.nanoTime();
+                continue;
+            }// end game pausing
 
-            AIDecisions((now-lastTick)/ 1000000000);
+
+            double now = System.nanoTime();
 
             analyzeKeyboardInput();
             tick((now - lastTick) / 1000000000);
+            AIDecisions((now-lastTick)/ 1000000000);
 
             lastTick = now;
             try {

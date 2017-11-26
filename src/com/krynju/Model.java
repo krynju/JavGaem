@@ -11,6 +11,9 @@ public class Model {
     public LinkedList<GameObject> objectList = new LinkedList<GameObject>();
 
     public Model() {
+        load();
+    }
+    private void load(){
         /*initiate tiles*/
         new Field();
 
@@ -28,6 +31,11 @@ public class Model {
 
         /*walls*/
         addWalls();
+    }
+
+    public void reload(){
+        objectList.clear();
+        load();
     }
 
     private void addWalls() {

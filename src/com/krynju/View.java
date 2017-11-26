@@ -29,18 +29,25 @@ public class View extends JPanel implements Runnable {
         this.setBounds(140,60,520,440);
         View v = this;
 
+        /*pause button*/
         JButton button = new JButton();
         button.addActionListener(e -> {
             System.out.println("gay");
+            Game.setPause(!Game.isPaused());
             v.requestFocus();
         });
         frame.add(button);
-        button.setBounds(50,50,69,69);
-        button.setText("gay");
+        button.setBounds(10,50,100,20);
+        button.setText("gaypause");
 
+
+        /*reset button button*/
         JButton button2 = new JButton();
         button2.addActionListener(e -> {
             System.out.println("gayers");
+            Game.setPause(true);
+            model.reload();
+            Game.setPause(false);
             v.requestFocus();
         });
         frame.add(button2);

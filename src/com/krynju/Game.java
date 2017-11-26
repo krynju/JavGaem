@@ -21,7 +21,15 @@ public class Game {
     private static View view;
     private static Controller controller;
     private static Model model;
+    private static boolean paused = false;
 
+    public static boolean isPaused() {
+        return paused;
+    }
+
+    public static void setPause(boolean running) {
+        Game.paused = running;
+    }
 
     public static void main(String[] args) {
         model = new Model();
