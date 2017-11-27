@@ -1,5 +1,7 @@
 package com.krynju.modules;
 
+import com.krynju.Game;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.LinkedList;
@@ -32,7 +34,7 @@ public class Bomb extends GameObject {
             g.setColor(Color.black);
         g.drawOval((int) x, (int) y, 40, 40);
         for (Tile tile : dangerTiles) {
-            if(!tile.isWallOnTile())
+            if (!tile.isWallOnTile())
                 g.drawRect(tile.getX(), tile.getY(), 40, 40);
         }
     }
@@ -79,18 +81,48 @@ public class Bomb extends GameObject {
 
     private void setDangerZone(boolean state) {
         for (Tile tile : dangerTiles) {
-            tile.setBombDanger(state);
+            if (state) {
+                if (tile.isBombDanger())
+                    tile.setTwoBombDanger(true);
+                else
+                    tile.setBombDanger(true);
+            } else {
+                if (tile.isTwoBombDanger())
+                    tile.setTwoBombDanger(false);
+                else
+                    tile.setBombDanger(false);
+            }
         }
     }
 
     private void boom() {
+        boolean playerCaught = false;
+        boolean enemyCaught = false;
         dangerTiles.addFirst(assignedTile);
         for (Tile tile : dangerTiles) {
             if (tile.isWallOnTile())
                 tile.getWall().destroy();
-            if (tile.isPlayerOnTile())
-                System.out.println("die fggt");
+
+            if (tile.isPlayerOnTile()) {
+                playerCaught = true;
+            }
+            if (tile.isEnemyOnTile()) {
+                enemyCaught = true;
+            }
         }
+
+        if (playerCaught && enemyCaught) {
+            System.out.println("draw");
+            Game.setGameEnd(true);
+        } else if (playerCaught) {
+            System.out.println("lose");
+            Game.setGameEnd(true);
+        } else if (enemyCaught) {
+            System.out.println("win");
+            Game.setGameEnd(true);
+        }
+
+
         bombTicking = false;
         bombSet = false;
         assignedTile.setBombed(false);

@@ -52,10 +52,10 @@ public class Controller extends Canvas implements Runnable {
 
 
             double now = System.nanoTime();
-
+            AIDecisions((now-lastTick)/ 1000000000);
             analyzeKeyboardInput();
             tick((now - lastTick) / 1000000000);
-            AIDecisions((now-lastTick)/ 1000000000);
+
 
             lastTick = now;
             try {

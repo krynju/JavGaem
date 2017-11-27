@@ -42,7 +42,22 @@ public class KeyboardInput extends KeyAdapter {
             }
         }
         if (key == KeyEvent.VK_SPACE) {
-            placeBomb = true;
+
+            if(!Game.isPaused())
+                placeBomb = true;
+            if(Game.isPaused()){
+                Game.setPause(false);
+            }
+        }
+        if(key== KeyEvent.VK_P){
+            Game.setPause(!Game.isPaused());
+        }
+
+        if(key==KeyEvent.VK_R){
+            if(Game.isGameEnd()) {
+                Game.setGameEnd(false);
+            }
+
         }
 
 

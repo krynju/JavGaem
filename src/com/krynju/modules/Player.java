@@ -27,7 +27,10 @@ public class Player extends GameObject {
         ID = id;
         this.bomb = bomb;
         this.color = color;
-        assignedTile.setPlayerOnTile(true);
+        if(this.ID == ObjectID.player)
+            assignedTile.setPlayerOnTile(true);
+        if(this.ID == ObjectID.enemy)
+            assignedTile.setEnemyOnTile(true);
     }
 
     public boolean isAtDestination() {
@@ -71,9 +74,16 @@ public class Player extends GameObject {
                 return;
         }
 
-        assignedTile.setPlayerOnTile(false);    //old tile
-        assignedTile = Field.getTileRef(tileCordX, tileCordY);    //get new tile
-        assignedTile.setPlayerOnTile(true);     //new tile
+        if(this.ID == ObjectID.player) {
+            assignedTile.setPlayerOnTile(false);    //old tile
+            assignedTile = Field.getTileRef(tileCordX, tileCordY);    //get new tile
+            assignedTile.setPlayerOnTile(true);     //new tile
+        }
+        if(this.ID == ObjectID.enemy) {
+            assignedTile.setEnemyOnTile(false);    //old tile
+            assignedTile = Field.getTileRef(tileCordX, tileCordY);    //get new tile
+            assignedTile.setEnemyOnTile(true);     //new tile
+        }
 
     }
 

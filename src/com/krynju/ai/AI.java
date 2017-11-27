@@ -90,7 +90,7 @@ public class AI {
                     /*SET A BOMB IF POSSIBLE*/
                     if (T.step == 1) {
                         setBombAlgorithm();
-                        System.out.println("found the target - setting the bomb");
+                        //System.out.println("found the target - setting the bomb");
                     }
                     break pathloop;
                 }
@@ -157,7 +157,7 @@ public class AI {
                     tile = Field.getTileRef(node.x, node.y);  //if it's a valid tile then get its reference
 
                 /*checking for walls and player*/
-                if (tile.isWallOnTile() || tile.isBombed() || tile.isPlayerOnTile()) {
+                if (tile.isWallOnTile() || tile.isBombed() || tile.isPlayerOnTile() || tile.isEnemyOnTile()) {
                     removeList.add(node);
                     continue;
                 }
@@ -225,7 +225,7 @@ public class AI {
                     tile = Field.getTileRef(node.x, node.y);  //if it's a valid tile then get its reference
 
                 /*checking for walls and player*/
-                if (tile.isWallOnTile() || tile.isBombed() || tile.isPlayerOnTile()) {
+                if (tile.isWallOnTile() || tile.isBombed() || tile.isPlayerOnTile() || tile.isEnemyOnTile()) {
                     removeList.add(node);
                     continue;
                 }
@@ -256,7 +256,7 @@ public class AI {
             i++;                //increment the step counter
         }
 
-        System.out.println("avoiding bomb");
+        //System.out.println("avoiding bomb");
 
         Node node = list.get(i);
         /*using saved previousNodes to find the node with step = 1*/
@@ -336,7 +336,7 @@ public class AI {
         Node node = list.get(i);
         Tile tile = Field.getTileRef(node.x, node.y);
         if (tile.isBombDanger() || tile.isBombed()) {
-            System.out.println("setting the delayFlag");
+            //System.out.println("setting the delayFlag");
             delayFlag = true;
             return (Direction.none);
         }
