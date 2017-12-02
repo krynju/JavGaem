@@ -19,15 +19,18 @@ public class Model {
 
         /*player*/
         Bomb bomb = new Bomb();
-        objectList.add(bomb);
         player = new Player(ObjectID.player, 0, 0, Game.playerColor, bomb);
-        objectList.add(player);
+
 
         /*AI*/
         Bomb bomb2 = new Bomb();
-        objectList.add(bomb2);
         enemy = new Player(ObjectID.enemy, Field.tileCountX - 1, Field.tileCountY - 1, Game.enemycolor, bomb2);
+
+
+        objectList.add(player);
         objectList.add(enemy);
+        objectList.add(bomb);
+        objectList.add(bomb2);
 
         /*walls*/
         addWalls();

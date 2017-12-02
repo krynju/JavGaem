@@ -132,7 +132,7 @@ public class Player extends GameObject {
     public void render(Graphics g) {
         g.setColor(color);
         g.fillRect((int) x, (int) y, 40, 40);
-//        /*image input*/
+        /*image input*/
 //        BufferedImage img = null;
 //        try {
 //            img = ImageIO.read(new File("src/com/krynju/Untitled.png")); // eventually C:\\ImageTest\\pic2.jpg

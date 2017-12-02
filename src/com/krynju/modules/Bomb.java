@@ -2,8 +2,11 @@ package com.krynju.modules;
 
 import com.krynju.Game;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 
 public class Bomb extends GameObject {
@@ -12,9 +15,15 @@ public class Bomb extends GameObject {
     private boolean bombTicking = false;
     private double timeElapsed = 0;
     private LinkedList<Tile> dangerTiles = new LinkedList<>();
+    BufferedImage img = null;
 
     public Bomb() {
         super(0, 0, 0, 0);
+//        try {
+//            img = ImageIO.read(new File("src/com/krynju/comic-boom-explosion-3.png")); // eventually C:\\ImageTest\\pic2.jpg
+//        }
+//        catch (IOException e) { e.printStackTrace(); }
+
     }
 
     @Override
@@ -30,12 +39,29 @@ public class Bomb extends GameObject {
     public void render(Graphics g) {
         if (!bombSet)
             return;
-        else
-            g.setColor(Color.black);
-        g.drawOval((int) x, (int) y, 40, 40);
+
+        g.setColor(new Color(0,0,0,125));
+        g.fillRect(assignedTile.getX(), assignedTile.getY(), 40, 40);
+
+        g.setColor(Color.white);
+        g.setFont(new Font("Verdana",Font.PLAIN,21));
+
+        String timerString = String.valueOf(2 - timeElapsed);
+        g.drawString(timerString.substring(0,3),assignedTile.getX()+3,assignedTile.getY()+28);
+
+        g.setColor(Game.bombColor);
         for (Tile tile : dangerTiles) {
             if (!tile.isWallOnTile())
-                g.drawRect(tile.getX(), tile.getY(), 40, 40);
+                g.fillRect(tile.getX(), tile.getY(), 40, 40);
+        }
+        g.setColor(Color.white);
+        g.setFont(new Font("Verdana",Font.PLAIN,12));
+        if(timeElapsed>1.9){
+            for(Tile tile:dangerTiles){
+                if(!tile.isWallOnTile())
+                    //g.drawImage(img,tile.getX(),tile.getY(),40,40,null);
+                    g.drawString("BOOM",tile.getX()+1,tile.getY()+24);
+            }
         }
     }
 

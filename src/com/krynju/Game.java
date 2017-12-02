@@ -10,11 +10,12 @@ public class Game {
     public static final int TICKRATE = 100;
     public static final int FRAMERATE = 120;
     public static final String title = "Gaem";
-    public static final Color playerColor = new Color(69, 255, 184);
+    public static final Color playerColor = new Color(0, 0, 255);
     public static final Color normalWallColor = new Color(0, 0, 0);
-    public static final Color destroyableWallColor = Color.pink;
-    public static final Color fieldColor = new Color(255, 127, 160);
+    public static final Color destroyableWallColor = new Color(255,159,99);
+    public static final Color fieldColor = new Color(255, 255, 255);
     public static final Color enemycolor = new Color(255, 0, 0);
+    public static final Color bombColor  = new Color(255,0,0,125);
     public static double AI_DELAY = 0.5;
     public static int AI_SPEED = 120;
     private static View view;
