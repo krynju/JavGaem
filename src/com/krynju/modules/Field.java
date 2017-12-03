@@ -46,9 +46,7 @@ public class Field {
             return false;
         if (tileField[x][y].isEnemyOnTile())
             return false;
-        if (x >= 0 && y >= 0 && x <= tileCountX - 1 && y <= tileCountY - 1)
-            return false;
-        return false;
+        return x >= 0 && y >= 0 && x <= tileCountX - 1 && y <= tileCountY - 1;
     }
 
     public static int getDestination(int x, int y, Direction direction) throws UnableToMove {
