@@ -12,8 +12,8 @@ public class Field {
     private static final int tileSize = 40;
     public static final int tileCountX = 13;
     public static final int tileCountY = 11;
-    private static final int fieldsSizeX = tileSize * (tileCountX - 1);
-    private static final int fieldsSizeY = tileSize * (tileCountY - 1);
+    public static final int fieldsSizeX = tileSize * tileCountX ;
+    public static final int fieldsSizeY = tileSize * tileCountY ;
 
     private static Tile[][] tileField;
 
@@ -22,7 +22,8 @@ public class Field {
     *    1   7x5
     *    2   field[6][4]
     *    3   field[x][y]
-    *    4                  */
+    *    4
+    *    */
     public Field() {
         tileField = new Tile[tileCountX][tileCountY];
         for (int i = 0; i < tileCountX; i++) {
@@ -45,7 +46,9 @@ public class Field {
             return false;
         if (tileField[x][y].isEnemyOnTile())
             return false;
-        return x >= 0 && y >= 0 && x <= tileCountX - 1 && y <= tileCountY - 1;
+        if (x >= 0 && y >= 0 && x <= tileCountX - 1 && y <= tileCountY - 1)
+            return false;
+        return false;
     }
 
     public static int getDestination(int x, int y, Direction direction) throws UnableToMove {
@@ -78,6 +81,6 @@ public class Field {
 
     public static void render(Graphics g) {
         g.setColor(Game.fieldColor);
-        g.fillRect(fieldsX, fieldsY, fieldsSizeX + tileSize, fieldsSizeY + tileSize);
+        g.fillRect(fieldsX, fieldsY, fieldsSizeX , fieldsSizeY);
     }
 }

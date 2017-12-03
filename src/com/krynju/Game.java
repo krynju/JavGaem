@@ -3,72 +3,29 @@ package com.krynju;
 import java.awt.*;
 
 public class Game {
+    /*Frame properties*/
     public static final int WIDTH = 696;
     public static final int HEIGHT = 557;
-    public static final int GAME_WIDTH = WIDTH - 56;
-    public static final int GAME_HEIGHT = HEIGHT - 77;
-    public static final int TICKRATE = 100;
     public static final int FRAMERATE = 120;
-    public static final String title = "Gaem";
+    public static final String title = "DANK SOILS BANDICOT";
+    /*GameObject colors*/
     public static final Color playerColor = new Color(0, 0, 255);
     public static final Color normalWallColor = new Color(0, 0, 0);
     public static final Color destroyableWallColor = new Color(255,159,99);
     public static final Color fieldColor = new Color(255, 255, 255);
-    public static final Color enemycolor = new Color(255, 0, 0);
+    public static final Color enemyColor = new Color(255, 0, 0);
     public static final Color bombColor  = new Color(255,0,0,125);
+    /*AI properties*/
     public static double AI_DELAY = 0.5;
     public static int AI_SPEED = 120;
+
     private static View view;
     private static Controller controller;
     private static Model model;
-    private static boolean paused = true;
-    private static boolean renderPaused = false;
-    private static boolean gameEnd = false;
-
-    public static boolean isRenderPaused() {
-        return renderPaused;
-    }
-
-    public static void setRenderPaused(boolean renderPaused) {
-        Game.renderPaused = renderPaused;
-    }
-
-    public static boolean isGameEnd() {
-        return gameEnd;
-    }
-
-    public static void setGameEnd(boolean gameEnd) {
-        if (gameEnd) {
-            Game.setPause(true);
-            Game.gameEnd = true;
-        } else {
-            Game.setPause(true);
-            Game.setRenderPaused(true);
-            model.reload();
-            Game.gameEnd = false;
-            Game.setPause(true);
-            Game.setRenderPaused(false);
-        }
-    }
-
-    public static boolean isPaused() {
-        return paused;
-    }
-
-    public static void setPause(boolean running) {
-        if (!Game.isGameEnd())
-            Game.paused = running;
-    }
 
     public static void main(String[] args) {
-        model = new Model();
-        controller = new Controller(model);
-        view = new View(model, controller.getKeyboardInput());
+        controller = new Controller();
+        model = new Model(controller);
+        view = new View(controller);
     }
-
-    public void restart() {
-
-    }
-
-
 }

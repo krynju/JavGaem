@@ -1,20 +1,25 @@
 package com.krynju.modules;
 
+import com.krynju.Controller;
 import com.krynju.Game;
+import com.krynju.enums.Ending;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.LinkedList;
 
 public class Bomb extends GameObject {
-    private static final int tickingTime = 2;
+    private Controller controller;
+    private final int tickingTime = 2;
     private boolean bombSet = false;
     private boolean bombTicking = false;
     private double timeElapsed = 0;
     private LinkedList<Tile> dangerTiles = new LinkedList<>();
 
-    public Bomb() {
+    public Bomb(Controller c) {
         super(0, 0, 0, 0);
+        this.controller=c;
     }
 
     @Override
@@ -134,17 +139,18 @@ public class Bomb extends GameObject {
         }
 
         if (playerCaught && enemyCaught) {
-            System.out.println("draw");
-            Game.setGameEnd(true);
+            controller.setEndingType(Ending.draw);
+            controller.setGameEnd(true);
+            return;
         } else if (playerCaught) {
-            System.out.println("lose");
-            Game.setGameEnd(true);
+            controller.setEndingType(Ending.lose);
+            controller.setGameEnd(true);
+            return;
         } else if (enemyCaught) {
-            System.out.println("win");
-            Game.setGameEnd(true);
-
+            controller.setEndingType(Ending.win);
+            controller.setGameEnd(true);
+            return;
         }
-
 
         bombTicking = false;
         bombSet = false;

@@ -9,21 +9,38 @@ import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
-public class View extends JPanel implements Runnable {
+public class View implements Runnable {
+    private final Controller controller;
+    private JPanel gamePanel;
     private JButton playPauseButton;
-    private JLabel restartLabel;
+    private JTextArea instructions;
 
     private boolean running = false;
 
     private Thread thread;
-    private Model model;
 
-    public View(Model model, KeyboardInput keyboardInput) {
-        View gamePanel = this;
-        this.model = model;
-        this.addKeyListener(keyboardInput);
-        this.setBounds(140, 60, 520, 440);
+    View(Controller controller) {
+        this.controller = controller;
+        //controller.addView(this);
 
+        /*GAMEPANEL JPanel*/
+        gamePanel = new JPanel(){
+            public void paint(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setColor(Color.white);
+                g2d.fillRect(0, 0, Field.fieldsSizeX, Field.fieldsSizeY);
+                Field.render(g2d);    //render the field
+                for (GameObject obj : controller.getObjectList())//render the gameobjects
+                    obj.render(g2d);
+                if(controller.isGameEnd())
+                    displayEndMessage(g2d);
+                g2d.dispose();
+        }};
+        gamePanel.addKeyListener(controller.getKeyboardInput());
+        gamePanel.setBounds(140, 60, Field.fieldsSizeX, Field.fieldsSizeY);
+
+
+        /*FRAME JFrame*/
         JFrame frame = new JFrame(Game.title);
         frame.setLocation(300, 100);
         frame.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
@@ -32,13 +49,13 @@ public class View extends JPanel implements Runnable {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLayout(null);
-        frame.add(this);
+        frame.add(gamePanel);
 
 
         /*PLAY/PAUSE Button*/
         playPauseButton = new JButton();
         playPauseButton.addActionListener(e -> {
-            Game.setPause(!Game.isPaused());
+            controller.setPause(!controller.isPaused());
             gamePanel.requestFocus();
         });
         playPauseButton.setBounds(10, 60, 120, 40);
@@ -48,7 +65,7 @@ public class View extends JPanel implements Runnable {
         /*RESET Button*/
         JButton resetButton = new JButton();
         resetButton.addActionListener(e -> {
-            Game.setGameEnd(false);     //it's literally a restart
+            controller.setGameEnd(false);     //it's literally a restart
             gamePanel.requestFocus();
         });
         resetButton.setBounds(10, 110, 120, 40);
@@ -106,27 +123,30 @@ public class View extends JPanel implements Runnable {
         frame.add(comboBox);
 
 
-        /*PRESS R TO RESTART Label*/
-        restartLabel = new JLabel();
-        restartLabel.setBounds(10, 230, 120, 20);
-        frame.add(restartLabel);
+        /*INSTRUCTIONS TextArea*/
+        instructions = new JTextArea();
+        instructions.setBounds(10, 230, 120, 65);
+        instructions.setEditable(false);
+        instructions.setFocusable(false);
+        instructions.setText("Instructions:\nW,A,S,D - move\nSPACE - set bomb\nP - pause");
+        frame.add(instructions);
 
 
+        /*FRAME VISIBILITY ON*/
         frame.pack();
         frame.setVisible(true);
         frame.setFocusable(true);
 
-
         this.start();
     }
 
-    synchronized void start() {
+    private synchronized void start() {
         thread = new Thread(this);
         thread.start();
         running = true;
     }
 
-    synchronized void stop() {
+    private synchronized void stop() {
         try {
             thread.join();
             running = false;
@@ -138,7 +158,7 @@ public class View extends JPanel implements Runnable {
     @Override
     public void run() {
         /*Initial focus request by the gamePanel*/
-        this.requestFocus();
+        gamePanel.requestFocus();
         /*Initialising the time variable*/
         double lastFrame = System.nanoTime();
         /*Render loop start*/
@@ -146,7 +166,7 @@ public class View extends JPanel implements Runnable {
             /*Updating the UI text*/
             uiTextUpdate();
             /*Pausing the rendering functionality*/
-            if (Game.isRenderPaused()) {
+            if (controller.isRenderPaused()) {
                 try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
@@ -158,7 +178,7 @@ public class View extends JPanel implements Runnable {
             double now = System.nanoTime();
             /*Render according to the set frame rate*/
             if ((now - lastFrame) > 1000000000 / Game.FRAMERATE) {
-                repaint();
+                gamePanel.repaint();
                 lastFrame = now;
             }
             try {
@@ -171,28 +191,30 @@ public class View extends JPanel implements Runnable {
     }
 
     private void uiTextUpdate() {
-        /*PRESS R TO RESTART Label text update*/
-        if (Game.isGameEnd())
-            restartLabel.setText("PRESS R TO RESTART");
-        else
-            restartLabel.setText("");
-
         /*PLAY/PAUSE Button text update*/
-        if (Game.isPaused())
+        if (controller.isPaused())
             playPauseButton.setText("Play");
         else
             playPauseButton.setText("Pause");
     }
 
-    public void paint(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        /*background*/
-        g2d.setColor(Color.white);
-        g2d.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
-        Field.render(g);    //render the field
-        for (GameObject obj : model.objectList) {//render the gameobjects
-            obj.render(g2d);
+    private void displayEndMessage(Graphics2D g2d) {
+        g2d.setColor(new Color(0,0,0,200));
+        g2d.fillRect(0,170,Field.fieldsSizeX,120);
+        g2d.setFont(new Font("Verdana",Font.PLAIN,100));
+        g2d.setColor(new Color(200,48,46));
+        switch(controller.getEndingType()){
+            case lose:
+                g2d.drawString("YOU DIED",(int)(Field.fieldsSizeX * 0.013),(int)(Field.fieldsSizeY * 0.58));
+                break;
+            case win:
+                g2d.drawString("YOU WIN", (int)(Field.fieldsSizeX * 0.065),(int)(Field.fieldsSizeY * 0.58));
+                break;
+            case draw:
+                g2d.drawString("DRAW", (int)(Field.fieldsSizeX * 0.2), (int)(Field.fieldsSizeY * 0.58));
+                break;
         }
-        g2d.dispose();
+        g2d.setFont(new Font("Verdana",Font.PLAIN,20));
+        g2d.drawString("PRESS R TO RESTART",(int)(Field.fieldsSizeX * 0.30),(int)(Field.fieldsSizeY * 0.64));
     }
 }

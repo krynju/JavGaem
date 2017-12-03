@@ -2,31 +2,37 @@ package com.krynju;
 
 import com.krynju.ai.AI;
 import com.krynju.enums.Direction;
+import com.krynju.enums.Ending;
 import com.krynju.modules.GameObject;
 
 import java.awt.Canvas;
+import java.util.LinkedList;
 
-public class Controller extends Canvas implements Runnable {
+public class Controller implements Runnable {
+    private KeyboardInput keyboardInput;
     private Thread thread;
     private Model model;
-    private KeyboardInput keyboardInput;
     private AI ai;
     private boolean running = false;
+    private double delayTimeCounter = 0;
 
-    public Controller(Model model) {
-        this.ai = new AI(model);
-        this.model = model;
-        this.keyboardInput = new KeyboardInput();
+    /*Game flow flags*/
+    private boolean paused = true;
+    private boolean renderPaused = false;
+    private boolean gameEnd = false;
+    private Ending endingType;
+
+    Controller() {
+        this.keyboardInput = new KeyboardInput(this);
         this.start();
     }
 
-    synchronized void start() {
+    private synchronized void start() {
         thread = new Thread(this);
         thread.start();
         running = true;
     }
-
-    synchronized void stop() {
+    private synchronized void stop() {
         try {
             thread.join();
             running = false;
@@ -36,26 +42,23 @@ public class Controller extends Canvas implements Runnable {
     }
 
     public void run() {
-
         double lastTick = System.nanoTime();
         while (running) {
-            /*game pausing functionality*/
-            if(Game.isPaused()){
-                try{
+            /*this pausing functionality*/
+            if (this.isPaused()) {
+                try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 lastTick = System.nanoTime();
                 continue;
-            }// end game pausing
-
+            }// end this pausing
 
             double now = System.nanoTime();
-            AIDecisions((now-lastTick)/ 1000000000);
+            AIDecisions((now - lastTick) / 1000000000);
             analyzeKeyboardInput();
             tick((now - lastTick) / 1000000000);
-
 
             lastTick = now;
             try {
@@ -67,26 +70,21 @@ public class Controller extends Canvas implements Runnable {
         stop();
     }
 
-
-    private double delayTimeCounter = 0;
     private void AIDecisions(double timeElapsedSeconds) {
-        if(ai.isDelay()){
+        if (ai.isDelay()) {
             delayTimeCounter += timeElapsedSeconds;
-            if(delayTimeCounter > Game.AI_DELAY){
-                if(model.enemy.isAtDestination()) {
-                    try {
-                        model.enemy.move(ai.mainAIAlgorithm());
-                    } catch (Exception unableToMove) {}
-                    delayTimeCounter = 0;
-                    ai.setDelay(false);
-                }
-            }
-        }
-        else{
-            if(model.enemy.isAtDestination()) {
+            if (delayTimeCounter > Game.AI_DELAY && model.enemy.isAtDestination()) {
                 try {
                     model.enemy.move(ai.mainAIAlgorithm());
-                } catch (Exception unableToMove) {}
+                } catch (Exception ignored) {
+                }
+                delayTimeCounter = 0;
+                ai.setDelay(false);
+            }
+        } else if (model.enemy.isAtDestination()) {
+            try {
+                model.enemy.move(ai.mainAIAlgorithm());
+            } catch (Exception ignored) {
             }
         }
     }
@@ -97,9 +95,16 @@ public class Controller extends Canvas implements Runnable {
         }
     }
 
+    public void addModel(Model model) {
+        this.model = model;
+        this.ai = new AI(model);
+        this.model = model;
+    }
+    public LinkedList<GameObject> getObjectList() {
+        return model.objectList;
+    }
 
     private void analyzeKeyboardInput() {
-
         /*Bomb placement*/
         if (keyboardInput.isPlaceBomb()) {
             model.player.placeBomb();
@@ -113,6 +118,7 @@ public class Controller extends Canvas implements Runnable {
         } catch (Exception e) {
             return;
         }
+
         /*Basic movement - object not moving and key pressed*/
         if (model.player.isAtDestination()) {    //if at destination
             try {
@@ -126,7 +132,7 @@ public class Controller extends Canvas implements Runnable {
                 }
 
                 /*if it exists check if the direction1 and direction2 aren't opposite
-                * to avoid going back and forth near walls when opposite keys are pressed down*/
+                 * to avoid going back and forth near walls when opposite keys are pressed down*/
                 if (directionLast == Direction.down && directionLastMinus == Direction.up ||
                         directionLast == Direction.up && directionLastMinus == Direction.down ||
                         directionLast == Direction.left && directionLastMinus == Direction.right ||
@@ -135,13 +141,48 @@ public class Controller extends Canvas implements Runnable {
 
                 try {
                     model.player.move(directionLastMinus);  //if everything is ok then try to move in the direction2
-                } catch (Exception ignored2) {}
+                } catch (Exception ignored2) {
+                }
             }
         }
     }
-
-
     public KeyboardInput getKeyboardInput() {
         return keyboardInput;
+    }
+
+    public Ending getEndingType() {
+        return endingType;
+    }
+    public void setEndingType(Ending endingType) {
+        this.endingType = endingType;
+    }
+
+    public boolean isRenderPaused() {
+        return renderPaused;
+    }
+
+    public boolean isGameEnd() {
+        return gameEnd;
+    }
+    public void setGameEnd(boolean gameEnd) {
+        if (gameEnd) {
+            this.setPause(true);
+            this.gameEnd = true;
+        } else {
+            this.setPause(true);
+            renderPaused = true;
+            model.reload();
+            this.gameEnd = false;
+            this.setPause(true);
+            renderPaused = false;
+        }
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+    public void setPause(boolean running) {
+        if (!this.isGameEnd())
+            this.paused = running;
     }
 }
