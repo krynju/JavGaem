@@ -1,25 +1,62 @@
 package com.krynju;
 
 import com.krynju.enums.Direction;
-import com.krynju.enums.Ending;
-
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
+/**
+ * The main gamePanel's keyboard input class. It records the key's pressed by the user.
+ * The data is then analysed by the controller
+ */
 public class KeyboardInput extends KeyAdapter {
-    private Controller controller;
+    /**
+     * List containing the keys that got pressed in the right order.
+     * The last element is the key that was pressed most recently.
+     * When a key is released it is removed from this list
+     */
     public LinkedList<Direction> queuedKeys = new LinkedList<>();
+    /**
+     * Controller reference
+     */
+    private Controller controller;
+    /**
+     * A marker that W was pressed
+     */
     private boolean upInQueue = false;
+    /**
+     * A marker that S was pressed
+     */
     private boolean downInQueue = false;
+    /**
+     * A marker that L was pressed
+     */
     private boolean leftInQueue = false;
+    /**
+     * A marker that D was pressed
+     */
     private boolean rightInQueue = false;
-    private boolean placeBomb = false;
+    /**
+     * A marker that the bomb is queued to be set
+     */
+    private boolean placeBombQueued = false;
 
-    KeyboardInput(Controller controller){
-        this.controller=controller;
+    /**
+     * Constructor is only adding a reference to the controller,
+     * necessary for pausing the game
+     *
+     * @see Controller
+     */
+    KeyboardInput(Controller controller) {
+        this.controller = controller;
     }
 
+    /**
+     * Analyzing key presses.
+     * WASD - adding to the queue and setting the right flag to true
+     * SPACE - setting the bomb IF the game isn't paused
+     * R - restarting the game when the game is finished
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
@@ -48,23 +85,20 @@ public class KeyboardInput extends KeyAdapter {
             }
         }
         if (key == KeyEvent.VK_SPACE) {
-
-            if(!controller.isPaused())
-                placeBomb = true;
-            if(controller.isPaused()){
+            if (!controller.isPaused())
+                placeBombQueued = true;
+            if (controller.isPaused()) {
                 controller.setPause(false);
             }
         }
-        if(key== KeyEvent.VK_P){
+        if (key == KeyEvent.VK_P) {
             controller.setPause(!controller.isPaused());
         }
-
-        if(key==KeyEvent.VK_R){
-            if(controller.isGameEnd()) {
+        if (key == KeyEvent.VK_R) {
+            if (controller.isGameEnd()) {
                 controller.setGameEnd(false);
             }
         }
-
 //        if(key==KeyEvent.VK_Y){
 //            controller.setEndingType(Ending.draw);
 //            controller.setGameEnd(true);
@@ -77,10 +111,11 @@ public class KeyboardInput extends KeyAdapter {
 //            controller.setEndingType(Ending.lose);
 //            controller.setGameEnd(true);
 //        }
-
-
     }
 
+    /**
+     * Removing the right key from the queue and setting off the right flag
+     */
     @Override
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
@@ -102,11 +137,19 @@ public class KeyboardInput extends KeyAdapter {
         }
     }
 
-    public boolean isPlaceBomb() {
-        return placeBomb;
+    /**
+     * placeBombQueued getter
+     *
+     * @return placeBombQueued boolean value
+     */
+    public boolean isPlaceBombQueued() {
+        return placeBombQueued;
     }
 
-    public void setPlaceBomb(boolean placeBomb) {
-        this.placeBomb = placeBomb;
+    /**
+     * placeBombQueued setter
+     */
+    public void setPlaceBombQueued(boolean placeBombQueued) {
+        this.placeBombQueued = placeBombQueued;
     }
 }

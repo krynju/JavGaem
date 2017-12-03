@@ -4,7 +4,6 @@ import com.krynju.Model;
 import com.krynju.enums.Direction;
 import com.krynju.modules.Field;
 import com.krynju.modules.Tile;
-
 import java.util.LinkedList;
 
 public class AI {
@@ -15,7 +14,6 @@ public class AI {
     public AI(Model model) {
         this.model = model;
     }
-
 
     public boolean isDelay() {
         return delay;

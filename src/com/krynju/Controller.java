@@ -5,7 +5,6 @@ import com.krynju.enums.Direction;
 import com.krynju.enums.Ending;
 import com.krynju.modules.GameObject;
 
-import java.awt.Canvas;
 import java.util.LinkedList;
 
 public class Controller implements Runnable {
@@ -106,9 +105,9 @@ public class Controller implements Runnable {
 
     private void analyzeKeyboardInput() {
         /*Bomb placement*/
-        if (keyboardInput.isPlaceBomb()) {
+        if (keyboardInput.isPlaceBombQueued()) {
             model.player.placeBomb();
-            keyboardInput.setPlaceBomb(false);
+            keyboardInput.setPlaceBombQueued(false);
         }
 
         /*Fetching keyboard input from the queue*/
