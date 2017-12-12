@@ -21,7 +21,7 @@ public class Player extends GameObject {
     private Color color;
 
     public Player(ObjectID id, int x, int y, Color color, Bomb bomb) {
-        super(x, y, 0, 0);
+        super(x, y);
         destinationX = assignedTile.getX();
         destinationY = assignedTile.getY();
         ID = id;
@@ -132,13 +132,6 @@ public class Player extends GameObject {
     public void render(Graphics g) {
         g.setColor(color);
         g.fillRect((int) x, (int) y, 40, 40);
-        /*image input*/
-//        BufferedImage img = null;
-//        try {
-//            img = ImageIO.read(new File("src/com/krynju/Untitled.png")); // eventually C:\\ImageTest\\pic2.jpg
-//        }
-//        catch (IOException e) { e.printStackTrace(); }
-//        g.drawImage(img,(int)x,(int)y,null);
     }
 
     public void placeBomb() {

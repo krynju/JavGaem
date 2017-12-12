@@ -3,28 +3,43 @@ package com.krynju;
 import com.krynju.modules.Field;
 import com.krynju.modules.GameObject;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+/**
+ * View class creates the whole UI and runs the rendering loop
+ */
 public class View implements Runnable {
     private final Controller controller;
     private JPanel gamePanel;
     private JButton playPauseButton;
-    private JTextArea instructions;
-
-    private boolean running = false;
-
     private Thread thread;
 
+    /**
+     * Flag if the thread is running
+     */
+    private boolean running = false;
+
+    /**
+     * The constructor initialises all UI components and then starts a thread with the rendering loop
+     */
     View(Controller controller) {
         this.controller = controller;
-        //controller.addView(this);
 
         /*GAMEPANEL JPanel*/
-        gamePanel = new JPanel(){
+        gamePanel = new JPanel() {
             public void paint(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setColor(Color.white);
@@ -32,10 +47,11 @@ public class View implements Runnable {
                 Field.render(g2d);    //render the field
                 for (GameObject obj : controller.getObjectList())//render the gameobjects
                     obj.render(g2d);
-                if(controller.isGameEnd())
+                if (controller.isGameEnd())
                     displayEndMessage(g2d);
                 g2d.dispose();
-        }};
+            }
+        };
         gamePanel.addKeyListener(controller.getKeyboardInput());
         gamePanel.setBounds(140, 60, Field.fieldsSizeX, Field.fieldsSizeY);
 
@@ -124,7 +140,7 @@ public class View implements Runnable {
 
 
         /*INSTRUCTIONS TextArea*/
-        instructions = new JTextArea();
+        JTextArea instructions = new JTextArea();
         instructions.setBounds(10, 230, 120, 65);
         instructions.setEditable(false);
         instructions.setFocusable(false);
@@ -137,15 +153,22 @@ public class View implements Runnable {
         frame.setVisible(true);
         frame.setFocusable(true);
 
+        /*THREAD START*/
         this.start();
     }
 
+    /**
+     * Creates a thread and starts the rendering loop
+     */
     private synchronized void start() {
         thread = new Thread(this);
         thread.start();
         running = true;
     }
 
+    /**
+     * Thread stop
+     */
     private synchronized void stop() {
         try {
             thread.join();
@@ -155,6 +178,9 @@ public class View implements Runnable {
         }
     }
 
+    /**
+     * Rendering loop
+     */
     @Override
     public void run() {
         /*Initial focus request by the gamePanel*/
@@ -190,6 +216,9 @@ public class View implements Runnable {
         stop();
     }
 
+    /**
+     * Updates the playPauseButton's text according to the gamestate
+     */
     private void uiTextUpdate() {
         /*PLAY/PAUSE Button text update*/
         if (controller.isPaused())
@@ -198,23 +227,29 @@ public class View implements Runnable {
             playPauseButton.setText("Pause");
     }
 
+    /**
+     * Displays the appropriate message when the game ends
+     */
     private void displayEndMessage(Graphics2D g2d) {
-        g2d.setColor(new Color(0,0,0,200));
-        g2d.fillRect(0,170,Field.fieldsSizeX,120);
-        g2d.setFont(new Font("Verdana",Font.PLAIN,100));
-        g2d.setColor(new Color(200,48,46));
-        switch(controller.getEndingType()){
+        /*Displaying grey bar in the middle of the screen*/
+        g2d.setColor(new Color(0, 0, 0, 200));
+        g2d.fillRect(0, 170, Field.fieldsSizeX, 120);
+        /*Displaying the appropriate message*/
+        g2d.setFont(new Font("Verdana", Font.PLAIN, 100));
+        g2d.setColor(new Color(200, 48, 46));
+        switch (controller.getEndingType()) {
             case lose:
-                g2d.drawString("YOU DIED",(int)(Field.fieldsSizeX * 0.013),(int)(Field.fieldsSizeY * 0.58));
+                g2d.drawString("YOU DIED", (int) (Field.fieldsSizeX * 0.013), (int) (Field.fieldsSizeY * 0.58));
                 break;
             case win:
-                g2d.drawString("YOU WIN", (int)(Field.fieldsSizeX * 0.065),(int)(Field.fieldsSizeY * 0.58));
+                g2d.drawString("YOU WIN", (int) (Field.fieldsSizeX * 0.065), (int) (Field.fieldsSizeY * 0.58));
                 break;
             case draw:
-                g2d.drawString("DRAW", (int)(Field.fieldsSizeX * 0.2), (int)(Field.fieldsSizeY * 0.58));
+                g2d.drawString("DRAW", (int) (Field.fieldsSizeX * 0.2), (int) (Field.fieldsSizeY * 0.58));
                 break;
         }
-        g2d.setFont(new Font("Verdana",Font.PLAIN,20));
-        g2d.drawString("PRESS R TO RESTART",(int)(Field.fieldsSizeX * 0.30),(int)(Field.fieldsSizeY * 0.64));
+        /*Displaying restart information under the message*/
+        g2d.setFont(new Font("Verdana", Font.PLAIN, 20));
+        g2d.drawString("PRESS R TO RESTART", (int) (Field.fieldsSizeX * 0.30), (int) (Field.fieldsSizeY * 0.64));
     }
 }

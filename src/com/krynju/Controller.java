@@ -7,30 +7,66 @@ import com.krynju.modules.GameObject;
 
 import java.util.LinkedList;
 
+/**
+ * The Controller class controls the flow of the game,
+ * runs a thread that updates the objects positions,
+ * analyses the player's keyboard input
+ * and runs the AI
+ */
 public class Controller implements Runnable {
+    /**
+     * Keyboard input reference, its the object that gets analysed in the controller
+     */
     private KeyboardInput keyboardInput;
     private Thread thread;
     private Model model;
     private AI ai;
+    /**
+     * Thread running flag
+     */
     private boolean running = false;
-    private double delayTimeCounter = 0;
+    /**
+     * Time counter for the AI, used when the delay is set by the AI
+     */
+    private double AIDelayTimeCounter = 0;
 
-    /*Game flow flags*/
+    /**
+     * Game paused flag (position update loop paused
+     */
     private boolean paused = true;
+    /**
+     * Renderer loop paused (screen stops updating)
+     */
     private boolean renderPaused = false;
+    /**
+     * Game ended marker, happens when win/lose/draw
+     */
     private boolean gameEnd = false;
+    /**
+     * The way the game ended win/lose/draw
+     */
     private Ending endingType;
 
+    /**
+     * The constructor creates a KeyboardInput and starts the thread
+     */
     Controller() {
         this.keyboardInput = new KeyboardInput(this);
         this.start();
     }
 
+    /**
+     * Creates a thread and starts the position updating loop
+     */
     private synchronized void start() {
         thread = new Thread(this);
         thread.start();
         running = true;
     }
+
+    /**
+     * Stop thread
+     */
     private synchronized void stop() {
         try {
             thread.join();
@@ -40,6 +76,9 @@ public class Controller implements Runnable {
         }
     }
 
+    /**
+     * Position updating loop
+     */
     public void run() {
         double lastTick = System.nanoTime();
         while (running) {
@@ -69,15 +108,18 @@ public class Controller implements Runnable {
         stop();
     }
 
+    /**
+     * AI decision making function and AI delay support
+     */
     private void AIDecisions(double timeElapsedSeconds) {
         if (ai.isDelay()) {
-            delayTimeCounter += timeElapsedSeconds;
-            if (delayTimeCounter > Game.AI_DELAY && model.enemy.isAtDestination()) {
+            AIDelayTimeCounter += timeElapsedSeconds;
+            if (AIDelayTimeCounter > Game.AI_DELAY && model.enemy.isAtDestination()) {
                 try {
                     model.enemy.move(ai.mainAIAlgorithm());
                 } catch (Exception ignored) {
                 }
-                delayTimeCounter = 0;
+                AIDelayTimeCounter = 0;
                 ai.setDelay(false);
             }
         } else if (model.enemy.isAtDestination()) {
@@ -88,21 +130,28 @@ public class Controller implements Runnable {
         }
     }
 
+    /**
+     * Function that updates all the GameObjects positions in the Model's list
+     */
     private void tick(double timeElapsedSeconds) {
         for (GameObject obj : model.objectList) {
             obj.tick(timeElapsedSeconds);
         }
     }
 
+    /**Adding the model to the local references*/
     public void addModel(Model model) {
         this.model = model;
         this.ai = new AI(model);
-        this.model = model;
     }
+
+    /**ObjectList getter
+     * @return model.objectList reference*/
     public LinkedList<GameObject> getObjectList() {
         return model.objectList;
     }
 
+    /**Analyses the players keyboard input*/
     private void analyzeKeyboardInput() {
         /*Bomb placement*/
         if (keyboardInput.isPlaceBombQueued()) {
@@ -145,6 +194,7 @@ public class Controller implements Runnable {
             }
         }
     }
+
     public KeyboardInput getKeyboardInput() {
         return keyboardInput;
     }
@@ -152,6 +202,7 @@ public class Controller implements Runnable {
     public Ending getEndingType() {
         return endingType;
     }
+
     public void setEndingType(Ending endingType) {
         this.endingType = endingType;
     }
@@ -163,6 +214,11 @@ public class Controller implements Runnable {
     public boolean isGameEnd() {
         return gameEnd;
     }
+
+    /**Game ending function.
+     * Pauses the controller's thread and then sets the gameEnd flag to true
+     * Passing false to the function pauses the controller loop and the rendering loop
+     * then reloads the model and ends the pause on the renderer*/
     public void setGameEnd(boolean gameEnd) {
         if (gameEnd) {
             this.setPause(true);
@@ -180,6 +236,8 @@ public class Controller implements Runnable {
     public boolean isPaused() {
         return paused;
     }
+
+    /**Setting the pause only works in the normal game mode, if the GameEnd flag is on then it's not possible*/
     public void setPause(boolean running) {
         if (!this.isGameEnd())
             this.paused = running;

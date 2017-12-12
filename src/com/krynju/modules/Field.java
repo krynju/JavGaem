@@ -38,6 +38,10 @@ public class Field {
         return tileField[x][y];
     }
 
+    /**Checks if it is legal to move to the given cords
+     * @param x cord you want to move to
+     * @param y cord you want to move to
+     * @return true/false if possible to move to the given cords*/
     private static boolean possibleToMove(int x, int y) {
         if (tileField[x][y].isWallOnTile() || tileField[x][y].isEnemyOnTile() ||
                 tileField[x][y].isBombed() || tileField[x][y].isPlayerOnTile())
@@ -46,6 +50,8 @@ public class Field {
         return x >= 0 && y >= 0 && x <= tileCountX - 1 && y <= tileCountY - 1;
     }
 
+    /**First uses Field#possibleToMove to check if the movement is legal, then returns the real cords to where
+     * you have to move*/
     public static int getDestination(int x, int y, Direction direction) throws UnableToMove {
         switch (direction) {
             case up:

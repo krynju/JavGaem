@@ -4,12 +4,12 @@ import com.krynju.Game;
 
 import java.awt.Color;
 import java.awt.Graphics;
-
+/**Destroyable wall*/
 public class DestroyableWall extends Wall {
     private boolean destroyed = false;
 
     public DestroyableWall(int x, int y) {
-        super(x, y, 0, 0);
+        super(x, y);
         destroyable = true;
         assignedTile.destroyable=true;
     }

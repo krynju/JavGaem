@@ -137,18 +137,10 @@ public class KeyboardInput extends KeyAdapter {
         }
     }
 
-    /**
-     * placeBombQueued getter
-     *
-     * @return placeBombQueued boolean value
-     */
     public boolean isPlaceBombQueued() {
         return placeBombQueued;
     }
 
-    /**
-     * placeBombQueued setter
-     */
     public void setPlaceBombQueued(boolean placeBombQueued) {
         this.placeBombQueued = placeBombQueued;
     }

@@ -1,14 +1,20 @@
 package com.krynju.modules;
 
 public class Tile {
-    private Wall wall;
     public boolean destroyable = false;
+    private Wall wall;
     private int x, y;
     private boolean wallOnTile = false;
     private boolean bombed = false;
     private boolean playerOnTile = false;
     private boolean enemyOnTile = false;
     private boolean bombDanger = false;
+    private boolean twoBombDanger = false;
+
+    public Tile(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
     public boolean isTwoBombDanger() {
         return twoBombDanger;
@@ -16,12 +22,6 @@ public class Tile {
 
     public void setTwoBombDanger(boolean twoBombDanger) {
         this.twoBombDanger = twoBombDanger;
-    }
-
-    private boolean twoBombDanger = false;
-    public Tile(int x, int y) {
-        this.x = x;
-        this.y = y;
     }
 
     public Wall getWall() {
@@ -64,19 +64,19 @@ public class Tile {
         this.wallOnTile = wallOnTile;
     }
 
-    public void setBombDanger(boolean bombDanger) {
-        this.bombDanger = bombDanger;
-    }
-
     public boolean isBombDanger() {
         return bombDanger;
     }
 
-    public void setEnemyOnTile(boolean enemyOnTile) {
-        this.enemyOnTile = enemyOnTile;
+    public void setBombDanger(boolean bombDanger) {
+        this.bombDanger = bombDanger;
     }
 
     public boolean isEnemyOnTile() {
         return enemyOnTile;
+    }
+
+    public void setEnemyOnTile(boolean enemyOnTile) {
+        this.enemyOnTile = enemyOnTile;
     }
 }

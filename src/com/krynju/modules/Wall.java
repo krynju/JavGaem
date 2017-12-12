@@ -1,12 +1,13 @@
 package com.krynju.modules;
 
 import java.awt.*;
-
+/**Abstract wall class contains basic wall parameters*/
 public abstract class Wall extends GameObject{
+    /**Flag that says if the wall is destroyable*/
     protected boolean destroyable;
 
-    public Wall(int x, int y, double xVel, double yVel) {
-        super(x, y, xVel, yVel);
+    public Wall(int x, int y) {
+        super(x, y);
         assignedTile.setWallOnTile(true);
         assignedTile.setWall(this);
     }
@@ -15,12 +16,7 @@ public abstract class Wall extends GameObject{
     public void tick(double timeElapsedSeconds) {}
 
     @Override
-    public void render(Graphics g) {
-    }
+    public void render(Graphics g) {}
 
     public abstract void destroy();
-
-    public boolean isDestroyable() {
-        return destroyable;
-    }
 }

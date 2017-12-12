@@ -9,27 +9,35 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.util.LinkedList;
 
+/**Bomb object class
+ * @see Player*/
 public class Bomb extends GameObject {
     private Controller controller;
+    /**Time reference used when the bomb is set and ticking*/
     private final int tickingTime = 2;
+    /**Flag that says if the bomb is set*/
     private boolean bombSet = false;
-    private boolean bombTicking = false;
+
+    /**Counter of the time elapsed from the bomb creation*/
     private double timeElapsed = 0;
+    /**List containing tiles that are endangered by the bomb explosion*/
     private LinkedList<Tile> dangerTiles = new LinkedList<>();
 
     public Bomb(Controller c) {
-        super(0, 0, 0, 0);
+        super(0, 0);
         this.controller=c;
     }
 
+
     @Override
     public void tick(double timeElapsedSeconds) {
-        if (bombTicking) {
+        if (bombSet) {
             timeElapsed += timeElapsedSeconds;
             if (timeElapsed >= tickingTime)
                 boom();
         }
     }
+
 
     @Override
     public void render(Graphics g) {
@@ -66,6 +74,9 @@ public class Bomb extends GameObject {
         }
     }
 
+    /**Sets the bomb on a tile
+     * @param x tile cord
+     * @param y tile cord*/
     public void setAt(int x, int y) {
         assignedTile = Field.getTileRef(x, y);  //get new tileref
         assignedTile.setBombed(true);           //bomb the new tile
@@ -74,11 +85,15 @@ public class Bomb extends GameObject {
         this.tileCordX = x;
         this.tileCordY = y;
         bombSet = true;
-        bombTicking = true;
         fetchingTilesAround(this.tileCordX, this.tileCordY);
         setDangerZone(true);
     }
 
+    /**Finding adjacent tiles to the main tile
+     * and adding them to the dangerTiles list
+     * @param x cord of the main tile
+     * @param y cord of the main tile
+     * @see Bomb#dangerTiles*/
     private void fetchingTilesAround(int x, int y) {
         int a[][] = new int[][]{
                 {x + 1, y, x + 2, y},
@@ -106,6 +121,11 @@ public class Bomb extends GameObject {
         }
     }
 
+    /**Sets bombDanger flags to the tiles in the dangerTIles list
+     * @param state the flag state true/false
+     * @see Bomb#dangerTiles
+     * @see Tile#bombDanger
+     * @see Tile#twoBombDanger*/
     private void setDangerZone(boolean state) {
         for (Tile tile : dangerTiles) {
             if (state) {
@@ -122,6 +142,10 @@ public class Bomb extends GameObject {
         }
     }
 
+    /**Checks all dangerTiles if there is a player object standing on them
+     * and eventually ending the game if there is
+     * also deciding if win/lose/draw
+     * */
     private void boom() {
         boolean playerCaught = false;
         boolean enemyCaught = false;
@@ -152,7 +176,6 @@ public class Bomb extends GameObject {
             return;
         }
 
-        bombTicking = false;
         bombSet = false;
         assignedTile.setBombed(false);
         timeElapsed = 0;
