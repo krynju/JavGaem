@@ -46,22 +46,26 @@ public class Bomb extends GameObject {
             return;
         /*else*/
 
-        /*draw a gray bomb rectangle*/
-        g.setColor(new Color(0,0,0,125));
-        g.fillRect(assignedTile.getX(), assignedTile.getY(), 40, 40);
-
-        /*draw the countdown timer on the bomb*/
-        g.setColor(Color.white);
-        g.setFont(new Font("Verdana",Font.PLAIN,21));
-        String timerString = String.valueOf(2 - timeElapsed);
-        g.drawString(timerString.substring(0,3),assignedTile.getX()+3,assignedTile.getY()+28);
-
         /*draw the red danger zone*/
         g.setColor(Game.bombColor);
+        g.fillRect(assignedTile.getX(), assignedTile.getY(), 40, 40);
         for (Tile tile : dangerTiles) {
             if (!tile.isWallOnTile())
                 g.fillRect(tile.getX(), tile.getY(), 40, 40);
         }
+
+        /*draw a gray bomb rectangle*/
+        g.setColor(new Color(50,50,50));
+        g.fillOval(assignedTile.getX(), assignedTile.getY(), 40, 40);
+
+
+        /*draw the countdown timer on the bomb*/
+        g.setColor(Color.white);
+        g.setFont(new Font("Verdana",Font.PLAIN,21));
+        if(timeElapsed < 2)
+            g.drawString(String.valueOf(2.0 - timeElapsed).substring(0,3),assignedTile.getX()+3,assignedTile.getY()+28);
+        else
+            g.drawString(String.valueOf(0.0).substring(0,3),assignedTile.getX()+3,assignedTile.getY()+28);
 
         /*draw the "BOOM"'s over the danger zone*/
         g.setColor(Color.white);
@@ -161,15 +165,18 @@ public class Bomb extends GameObject {
                 enemyCaught = true;
             }
         }
+        dangerTiles.remove(assignedTile);
 
         if (playerCaught && enemyCaught) {
             controller.setEndingType(Ending.draw);
             controller.setGameEnd(true);
             return;
+
         } else if (playerCaught) {
             controller.setEndingType(Ending.lose);
             controller.setGameEnd(true);
             return;
+
         } else if (enemyCaught) {
             controller.setEndingType(Ending.win);
             controller.setGameEnd(true);
@@ -181,6 +188,7 @@ public class Bomb extends GameObject {
         timeElapsed = 0;
         setDangerZone(false);
         dangerTiles.clear();
+
     }
 
     public boolean isBombSet() {

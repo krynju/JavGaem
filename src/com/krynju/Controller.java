@@ -133,7 +133,7 @@ public class Controller implements Runnable {
     /**
      * Function that updates all the GameObjects positions in the Model's list
      */
-    private void tick(double timeElapsedSeconds) {
+    synchronized private void tick(double timeElapsedSeconds) {
         for (GameObject obj : model.objectList) {
             obj.tick(timeElapsedSeconds);
         }

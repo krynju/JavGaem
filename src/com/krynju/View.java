@@ -204,7 +204,7 @@ public class View implements Runnable {
             double now = System.nanoTime();
             /*Render according to the set frame rate*/
             if ((now - lastFrame) > 1000000000 / Game.FRAMERATE) {
-                gamePanel.repaint();
+                render();
                 lastFrame = now;
             }
             try {
@@ -251,5 +251,10 @@ public class View implements Runnable {
         /*Displaying restart information under the message*/
         g2d.setFont(new Font("Verdana", Font.PLAIN, 20));
         g2d.drawString("PRESS R TO RESTART", (int) (Field.fieldsSizeX * 0.30), (int) (Field.fieldsSizeY * 0.64));
+    }
+
+    /**Synchronized repaint wrapper */
+    synchronized private void render(){
+        gamePanel.repaint();
     }
 }
