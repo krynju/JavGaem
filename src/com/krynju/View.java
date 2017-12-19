@@ -59,7 +59,7 @@ public class View implements Runnable {
 
 
         /*BANNER*/
-        ImageIcon img = new ImageIcon("src/com/krynju/resources/banner.PNG");
+        ImageIcon img = new ImageIcon("res/banner.PNG");
         JLabel banner = new JLabel(img);
         banner.setBounds(176, 0, 600, 60);
 
