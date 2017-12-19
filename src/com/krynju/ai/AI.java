@@ -446,7 +446,7 @@ public class AI {
                 } else
                     tile = Field.getTileRef(node.x, node.y);  //if it's a valid tile then get its reference
 
-                if (tile.destroyable) {
+                if (tile.isDestroyable()) {
                     list.get(i).destroyableWallsCount++;
                 }
 

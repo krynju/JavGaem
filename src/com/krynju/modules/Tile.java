@@ -1,19 +1,57 @@
 package com.krynju.modules;
 
+/**
+ * Basic tile class
+ * The field is made of tiles
+ *
+ * @see Field
+ */
 public class Tile {
-    public boolean destroyable = false;
-    private Wall wall;
+    /**
+     * Cords
+     */
     private int x, y;
+    /**
+     * Wall reference that sits on the tile
+     */
+    private Wall wall;
+    /**A flag that says if a wall is on the tile*/
     private boolean wallOnTile = false;
-    private boolean bombed = false;
+    /**
+     * A flag that says if the wall on the tile is destroyable
+     */
+    private boolean destroyable = false;
+
+    /**A flag that says if the player is standing on the tile
+     * @see com.krynju.enums.PlayerID#player
+     * @see Player*/
     private boolean playerOnTile = false;
+    /**A flag that says if the enemy is standing on the tile
+     * @see com.krynju.enums.PlayerID#enemy
+     * @see Player*/
     private boolean enemyOnTile = false;
+    /**
+     * A flag that says if there is a bomb on the tile
+     *
+     * @see Bomb
+     */
+    private boolean bombed = false;
+    /**A flag that says if the tile is in range of a bomb that is going to explode*/
     private boolean bombDanger = false;
+    /**A Flag that says if the tile is in range of two bombs*/
     private boolean twoBombDanger = false;
 
     public Tile(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public boolean isDestroyable() {
+        return destroyable;
+    }
+
+    public void setDestroyable(boolean destroyable) {
+        this.destroyable = destroyable;
     }
 
     public boolean isTwoBombDanger() {

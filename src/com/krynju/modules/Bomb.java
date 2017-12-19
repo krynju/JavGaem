@@ -7,23 +7,34 @@ import com.krynju.enums.Ending;
 import java.awt.*;
 import java.util.LinkedList;
 
-/**Bomb object class
- * @see Player*/
+/**
+ * Bomb object class
+ *
+ * @see Player
+ */
 public class Bomb extends GameObject {
     private Controller controller;
-    /**Time reference used when the bomb is set and ticking*/
+    /**
+     * Time reference used when the bomb is set and ticking
+     */
     private final int tickingTime = 2;
-    /**Flag that says if the bomb is set*/
+    /**
+     * Flag that says if the bomb is set
+     */
     private boolean bombSet = false;
 
-    /**Counter of the time elapsed from the bomb creation*/
+    /**
+     * Counter of the time elapsed from the bomb creation
+     */
     private double timeElapsed = 0;
-    /**List containing tiles that are endangered by the bomb explosion*/
+    /**
+     * List containing tiles that are endangered by the bomb explosion
+     */
     private LinkedList<Tile> dangerTiles = new LinkedList<>();
 
     public Bomb(Controller c) {
         super(0, 0);
-        this.controller=c;
+        this.controller = c;
     }
 
 
@@ -53,14 +64,14 @@ public class Bomb extends GameObject {
         }
 
         /*draw a gray bomb rectangle*/
-        g.setColor(new Color(50,50,50));
+        g.setColor(new Color(50, 50, 50));
         g.fillOval(assignedTile.getX(), assignedTile.getY(), Field.tileSize, Field.tileSize);
 
 
         /*draw the countdown timer on the bomb*/
         g.setColor(Color.white);
         g.setFont(new Font("Verdana", Font.PLAIN, 26));
-        if(timeElapsed < 2)
+        if (timeElapsed < 2)
             g.drawString(String.valueOf(2.0 - timeElapsed).substring(0, 3), assignedTile.getX() + 4, assignedTile.getY() + 34);
         else
             g.drawString(String.valueOf(0.0).substring(0, 3), assignedTile.getX() + 4, assignedTile.getY() + 34);
@@ -68,17 +79,20 @@ public class Bomb extends GameObject {
         /*draw the "BOOM"'s over the danger zone*/
         g.setColor(Color.white);
         g.setFont(new Font("Verdana", Font.PLAIN, 15));
-        if(timeElapsed>=1.8){
-            for(Tile tile:dangerTiles){
-                if(!tile.isWallOnTile())
+        if (timeElapsed >= 1.8) {
+            for (Tile tile : dangerTiles) {
+                if (!tile.isWallOnTile())
                     g.drawString("BOOM", tile.getX() + 1, tile.getY() + 30);
             }
         }
     }
 
-    /**Sets the bomb on a tile
+    /**
+     * Sets the bomb on a tile
+     *
      * @param x tile cord
-     * @param y tile cord*/
+     * @param y tile cord
+     */
     public void setAt(int x, int y) {
         assignedTile = Field.getTileRef(x, y);  //get new tileref
         assignedTile.setBombed(true);           //bomb the new tile
@@ -91,11 +105,14 @@ public class Bomb extends GameObject {
         setDangerZone(true);
     }
 
-    /**Finding adjacent tiles to the main tile
+    /**
+     * Finding adjacent tiles to the main tile
      * and adding them to the dangerTiles list
+     *
      * @param x cord of the main tile
      * @param y cord of the main tile
-     * @see Bomb#dangerTiles*/
+     * @see Bomb#dangerTiles
+     */
     private void fetchingTilesAround(int x, int y) {
         int a[][] = new int[][]{
                 {x + 1, y, x + 2, y},
@@ -123,11 +140,14 @@ public class Bomb extends GameObject {
         }
     }
 
-    /**Sets bombDanger flags to the tiles in the dangerTIles list
+    /**
+     * Sets bombDanger flags to the tiles in the dangerTIles list
+     *
      * @param state the flag state true/false
      * @see Bomb#dangerTiles
      * @see Tile#bombDanger
-     * @see Tile#twoBombDanger*/
+     * @see Tile#twoBombDanger
+     */
     private void setDangerZone(boolean state) {
         for (Tile tile : dangerTiles) {
             if (state) {
@@ -144,10 +164,11 @@ public class Bomb extends GameObject {
         }
     }
 
-    /**Checks all dangerTiles if there is a player object standing on them
+    /**
+     * Checks all dangerTiles if there is a player object standing on them
      * and eventually ending the game if there is
      * also deciding if win/lose/draw
-     * */
+     */
     private void boom() {
         boolean playerCaught = false;
         boolean enemyCaught = false;

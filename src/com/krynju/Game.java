@@ -6,6 +6,8 @@ import com.krynju.modules.Field;
 import java.awt.*;
 
 /**
+ * @author Krystian Guliński, 3AIR, 283408
+ *
  * Main Game static class
  * contains the main() function and properties of the Frame, key Gameobjects and AI
  */

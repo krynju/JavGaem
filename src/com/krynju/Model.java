@@ -1,12 +1,7 @@
 package com.krynju;
 
-import com.krynju.enums.ObjectID;
-import com.krynju.modules.Bomb;
-import com.krynju.modules.DestroyableWall;
-import com.krynju.modules.Field;
-import com.krynju.modules.GameObject;
-import com.krynju.modules.NormalWall;
-import com.krynju.modules.Player;
+import com.krynju.enums.PlayerID;
+import com.krynju.modules.*;
 
 import java.util.LinkedList;
 
@@ -61,10 +56,10 @@ public class Model {
         new Field();
         /*player*/
         Bomb bomb = new Bomb(controller);
-        player = new Player(ObjectID.player, 0, 0, Game.playerColor, bomb);
+        player = new Player(PlayerID.player, 0, 0, Game.playerColor, bomb);
         /*AI*/
         Bomb bomb2 = new Bomb(controller);
-        enemy = new Player(ObjectID.enemy, Field.tileCountX - 1, Field.tileCountY - 1, Game.enemyColor, bomb2);
+        enemy = new Player(PlayerID.enemy, Field.tileCountX - 1, Field.tileCountY - 1, Game.enemyColor, bomb2);
         /*adding objects to the list*/
         objectList.add(player);
         objectList.add(enemy);

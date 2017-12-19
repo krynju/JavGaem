@@ -10,7 +10,7 @@ public class DestroyableWall extends Wall {
     public DestroyableWall(int x, int y) {
         super(x, y);
         destroyable = true;
-        assignedTile.destroyable=true;
+        assignedTile.setDestroyable(true);
     }
 
     @Override
@@ -28,6 +28,6 @@ public class DestroyableWall extends Wall {
     public void destroy() {
         assignedTile.setWallOnTile(false);
         destroyed = true;
-        assignedTile.destroyable=false;
+        assignedTile.setDestroyable(false);
     }
 }

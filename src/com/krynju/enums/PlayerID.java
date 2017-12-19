@@ -1,6 +1,6 @@
 package com.krynju.enums;
 
-public enum ObjectID {
+public enum PlayerID {
     player,
     enemy
 }
