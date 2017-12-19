@@ -1,7 +1,7 @@
 package com.krynju.ai;
 /**Node class used in AI algorithms. It represents a single step in the path finding algorithm
  * @see AI*/
-class Node {
+public class Node {
     /**X cord of the tile the movement goes to*/
     int x;
     /**Y cord of the tile the movement goes to*/

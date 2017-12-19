@@ -3,20 +3,10 @@ package com.krynju;
 import com.krynju.modules.Field;
 import com.krynju.modules.GameObject;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import java.awt.*;
 
 /**
  * View class creates the whole UI and runs the rendering loop
@@ -53,12 +43,12 @@ public class View implements Runnable {
             }
         };
         gamePanel.addKeyListener(controller.getKeyboardInput());
-        gamePanel.setBounds(140, 60, Field.fieldsSizeX, Field.fieldsSizeY);
+        gamePanel.setBounds(145, 60, Field.fieldsSizeX, Field.fieldsSizeY);
 
 
         /*FRAME JFrame*/
         JFrame frame = new JFrame(Game.title);
-        frame.setLocation(300, 100);
+        frame.setLocation(0, 0);
         frame.setPreferredSize(new Dimension(Game.WIDTH, Game.HEIGHT));
         frame.setMaximumSize(new Dimension(Game.WIDTH, Game.HEIGHT));
         frame.setMinimumSize(new Dimension(Game.WIDTH, Game.HEIGHT));
@@ -68,13 +58,21 @@ public class View implements Runnable {
         frame.add(gamePanel);
 
 
+        /*BANNER*/
+        ImageIcon img = new ImageIcon("src/com/krynju/resources/banner.PNG");
+        JLabel banner = new JLabel(img);
+        banner.setBounds(176, 0, 600, 60);
+
+        frame.add(banner);
+
+
         /*PLAY/PAUSE Button*/
         playPauseButton = new JButton();
         playPauseButton.addActionListener(e -> {
             controller.setPause(!controller.isPaused());
             gamePanel.requestFocus();
         });
-        playPauseButton.setBounds(10, 60, 120, 40);
+        playPauseButton.setBounds(10, 60, 125, Field.tileSize);
         frame.add(playPauseButton);
 
 
@@ -84,7 +82,7 @@ public class View implements Runnable {
             controller.setGameEnd(false);     //it's literally a restart
             gamePanel.requestFocus();
         });
-        resetButton.setBounds(10, 110, 120, 40);
+        resetButton.setBounds(10, 130, 125, Field.tileSize);
         resetButton.setText("Reset");
         frame.add(resetButton);
 
@@ -92,31 +90,31 @@ public class View implements Runnable {
         /*DIFFICULTY Label - over the difficulty combo box*/
         JLabel difficultyLabel = new JLabel();
         difficultyLabel.setText("Difficulty setting:");
-        difficultyLabel.setBounds(10, 160, 120, 20);
+        difficultyLabel.setBounds(10, 190, 125, 20);
         frame.add(difficultyLabel);
 
 
         /*DIFFICULTY ComboBox*/
-        String[] abd = {"normie", "dank", "dankest", "most dankest"};
+        String[] abd = {"normal", "hard", "harder", "the hardest"};
         JComboBox<String> comboBox = new JComboBox<>(abd);
-        comboBox.setBounds(10, 180, 120, 30);
+        comboBox.setBounds(10, 210, 125, 30);
         comboBox.addActionListener(e -> {
             int s = ((JComboBox) e.getSource()).getSelectedIndex();
             switch (s) {
                 case 0: //normie
-                    Game.AI_SPEED = 120;
+                    Game.AI_SPEED = 3 * Field.tileSize;
                     Game.AI_DELAY = 0.5;
                     break;
                 case 1: //dank
-                    Game.AI_SPEED = 240;
+                    Game.AI_SPEED = 6 * Field.tileSize;
                     Game.AI_DELAY = 0.5;
                     break;
                 case 2://dankest
-                    Game.AI_SPEED = 120;
+                    Game.AI_SPEED = 3 * Field.tileSize;
                     Game.AI_DELAY = 0;
                     break;
                 case 3://most dankest
-                    Game.AI_SPEED = 240;
+                    Game.AI_SPEED = 6 * Field.tileSize;
                     Game.AI_DELAY = 0;
                     break;
             }
@@ -138,14 +136,8 @@ public class View implements Runnable {
         });
         frame.add(comboBox);
 
-
-        /*INSTRUCTIONS TextArea*/
-        JTextArea instructions = new JTextArea();
-        instructions.setBounds(10, 230, 120, 65);
-        instructions.setEditable(false);
-        instructions.setFocusable(false);
-        instructions.setText("Instructions:\nW,A,S,D - move\nSPACE - set bomb\nP - pause");
-        frame.add(instructions);
+        /*INSTRUCTIONS*/
+        instructions(frame);
 
 
         /*FRAME VISIBILITY ON*/
@@ -164,6 +156,7 @@ public class View implements Runnable {
         thread = new Thread(this);
         thread.start();
         running = true;
+        gamePanel.requestFocus();
     }
 
     /**
@@ -233,28 +226,115 @@ public class View implements Runnable {
     private void displayEndMessage(Graphics2D g2d) {
         /*Displaying grey bar in the middle of the screen*/
         g2d.setColor(new Color(0, 0, 0, 200));
-        g2d.fillRect(0, 170, Field.fieldsSizeX, 120);
+        g2d.fillRect(0, 4 * Field.tileSize, Field.fieldsSizeX, 3 * Field.tileSize);
         /*Displaying the appropriate message*/
-        g2d.setFont(new Font("Verdana", Font.PLAIN, 100));
+        g2d.setFont(new Font("Verdana", Font.PLAIN, 125));
         g2d.setColor(new Color(200, 48, 46));
         switch (controller.getEndingType()) {
             case lose:
-                g2d.drawString("YOU DIED", (int) (Field.fieldsSizeX * 0.013), (int) (Field.fieldsSizeY * 0.58));
+                g2d.drawString("YOU DIED", (int) (Field.fieldsSizeX * 0.02), (int) (6.3 * Field.tileSize));
                 break;
             case win:
-                g2d.drawString("YOU WIN", (int) (Field.fieldsSizeX * 0.065), (int) (Field.fieldsSizeY * 0.58));
+                g2d.drawString("YOU WIN", (int) (Field.fieldsSizeX * 0.065), (int) (6.3 * Field.tileSize));
                 break;
             case draw:
-                g2d.drawString("DRAW", (int) (Field.fieldsSizeX * 0.2), (int) (Field.fieldsSizeY * 0.58));
+                g2d.drawString("DRAW", (int) (Field.fieldsSizeX * 0.2), (int) (6.3 * Field.tileSize));
                 break;
         }
         /*Displaying restart information under the message*/
         g2d.setFont(new Font("Verdana", Font.PLAIN, 20));
-        g2d.drawString("PRESS R TO RESTART", (int) (Field.fieldsSizeX * 0.30), (int) (Field.fieldsSizeY * 0.64));
+        g2d.drawString("PRESS R TO RESTART", (int) (Field.fieldsSizeX * 0.33), (int) (Field.fieldsSizeY * 0.62));
     }
 
     /**Synchronized repaint wrapper */
     synchronized private void render(){
         gamePanel.repaint();
+    }
+
+    /**
+     * Adding instructions text to the frame
+     */
+    private void instructions(JFrame frame) {
+        Font textFont = new Font("Verdana", Font.PLAIN, 12);
+        Font blockFont = new Font("TimesRoman", Font.PLAIN, 20);
+        int y = 270;
+        int height = 20;
+
+
+        JLabel INSTRUCTIONS = new JLabel();
+        INSTRUCTIONS.setFont(new Font("Verdana", Font.BOLD, 12));
+        INSTRUCTIONS.setBounds(10, y - height, 125, height);
+        INSTRUCTIONS.setText("Instructions:");
+        frame.add(INSTRUCTIONS);
+
+        JLabel WASD = new JLabel();
+        WASD.setFont(textFont);
+        WASD.setBounds(10, y, 125, height);
+        WASD.setText("W,A,S,D - move");
+        frame.add(WASD);
+
+        JLabel BOMB = new JLabel();
+        BOMB.setFont(textFont);
+        BOMB.setBounds(10, y + height, 125, height);
+        BOMB.setText("SPACE - set bomb");
+        frame.add(BOMB);
+
+        JLabel PAUSE = new JLabel();
+        PAUSE.setFont(textFont);
+        PAUSE.setBounds(10, y + 2 * height, 125, height);
+        PAUSE.setText("P - pause");
+        frame.add(PAUSE);
+
+        JLabel PLAYER_SQUARE = new JLabel();
+        PLAYER_SQUARE.setFont(blockFont);
+        PLAYER_SQUARE.setForeground(Game.playerColor);
+        PLAYER_SQUARE.setBounds(10, y + 3 * height, 125, height);
+        PLAYER_SQUARE.setText("\u25A0");
+        frame.add(PLAYER_SQUARE);
+
+        JLabel PLAYER = new JLabel();
+        PLAYER.setFont(textFont);
+        PLAYER.setBounds(30, y + 3 * height, 125, height);
+        PLAYER.setText("- player");
+        frame.add(PLAYER);
+
+        JLabel ENEMY_SQUARE = new JLabel();
+        ENEMY_SQUARE.setFont(blockFont);
+        ENEMY_SQUARE.setForeground(Game.enemyColor);
+        ENEMY_SQUARE.setBounds(10, y + 4 * height, 125, height);
+        ENEMY_SQUARE.setText("\u25A0");
+        frame.add(ENEMY_SQUARE);
+
+        JLabel ENEMY = new JLabel();
+        ENEMY.setFont(textFont);
+        ENEMY.setBounds(30, y + 4 * height, 125, height);
+        ENEMY.setText("- enemy");
+        frame.add(ENEMY);
+
+        JLabel NORM_WALL_SQUARE = new JLabel();
+        NORM_WALL_SQUARE.setFont(blockFont);
+        NORM_WALL_SQUARE.setForeground(Game.normalWallColor);
+        NORM_WALL_SQUARE.setBounds(10, y + 5 * height, 125, height);
+        NORM_WALL_SQUARE.setText("\u25A0");
+        frame.add(NORM_WALL_SQUARE);
+
+        JLabel NORM_WALL = new JLabel();
+        NORM_WALL.setFont(textFont);
+        NORM_WALL.setBounds(30, y + 5 * height, 125, height);
+        NORM_WALL.setText("- normal wall");
+        frame.add(NORM_WALL);
+
+        JLabel DESTR_WALL_SQUARE = new JLabel();
+        DESTR_WALL_SQUARE.setFont(blockFont);
+        DESTR_WALL_SQUARE.setForeground(Game.destroyableWallColor);
+        DESTR_WALL_SQUARE.setBounds(10, y + 6 * height, 125, height);
+        DESTR_WALL_SQUARE.setText("\u25A0");
+        frame.add(DESTR_WALL_SQUARE);
+
+        JLabel DESTR_WALL = new JLabel();
+        DESTR_WALL.setFont(textFont);
+        DESTR_WALL.setBounds(30, y + 6 * height, 125, height);
+        DESTR_WALL.setText("- destroyable wall");
+        frame.add(DESTR_WALL);
     }
 }

@@ -1,7 +1,9 @@
 package com.krynju;
 
 import com.krynju.ai.AI;
-import java.awt.Color;
+import com.krynju.modules.Field;
+
+import java.awt.*;
 
 /**
  * Main Game static class
@@ -11,15 +13,15 @@ public class Game {
     /**
      * JFrame's width
      */
-    public static final int WIDTH = 696;
+    public static final int WIDTH = 835;
     /**
      * JFrame's height
      */
-    public static final int HEIGHT = 557;
+    public static final int HEIGHT = 675;
     /**
      * JFrame's title text
      */
-    public static final String title = "DANK SOILS BANDICOT";
+    public static final String title = "Bomberman";
     /**
      * Framerate cap for the View's rendering loop
      */
@@ -44,7 +46,7 @@ public class Game {
      *
      * @see AI
      */
-    public static int AI_SPEED = 120;
+    public static int AI_SPEED = 3 * Field.tileSize;
 
     /**
      * The main() function creates the three main objects that make the game work

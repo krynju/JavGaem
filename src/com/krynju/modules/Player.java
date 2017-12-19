@@ -4,14 +4,13 @@ import com.krynju.Game;
 import com.krynju.enums.Direction;
 import com.krynju.enums.ObjectID;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 
 import static java.lang.Math.abs;
 
 public class Player extends GameObject {
     protected ObjectID ID;
-    private int SPEED = 120;   //PLAYER's speed
+    private int SPEED = 3 * Field.tileSize;   //PLAYER's speed
     private boolean atDestination = true;   //Flag if not moving and standing on the rightInQueue spot
     public int destinationX;               //PLAYER's x destination cord
     public int destinationY;               //PLAYER's y destination cord
@@ -131,7 +130,7 @@ public class Player extends GameObject {
 
     public void render(Graphics g) {
         g.setColor(color);
-        g.fillRect((int) x, (int) y, 40, 40);
+        g.fillRect((int) x, (int) y, Field.tileSize, Field.tileSize);
     }
 
     public void placeBomb() {

@@ -3,11 +3,10 @@ package com.krynju.modules;
 import com.krynju.Game;
 import com.krynju.enums.Direction;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 
 public class Field {
-    private static final int tileSize = 40;
+    public static final int tileSize = 50;
     public static final int tileCountX = 13;
     public static final int tileCountY = 11;
     public static final int fieldsSizeX = tileSize * tileCountX;

@@ -8,7 +8,36 @@ import com.krynju.modules.Tile;
 import java.util.LinkedList;
 
 /**
- * Runs the AI, makes the decisions and runs the appropriate algorithms for the enemy movement
+ * Runs the AI, makes the decisions and runs the appropriate algorithms for the enemy movement<br>
+ *
+ * AI decision making:<br>
+ *
+ * if the player is unreachable because walls are in the way<br>
+ *      run the findBreakableWalls algorithm and set a bomb (setBombAlgorithm) on a tile where<br>
+ *      the explosion yields the most walls destroyed<br>
+ * <br>
+ * if the player is unreachable because of bombs in the way<br>
+ *      run the getCloseToTargetAlgorithm to find the shortest path to the player and then<br>
+ *      follow it until there is a bomb in the way, then stop and wait till the bomb explodes<br>
+ * <br>
+ * if the player is reachable<br>
+ *      find the shortest path to reach the player and set a bomb next to him (setBombAlgorithm)<br>
+ * <br>
+ * if the setBombAlgorithm is invoked<br>
+ *      first check if it is safe to place a bomb at the tile<br>
+ *      that means to check if there would be an escape path available if the bomb was placed at the tile<br>
+ * <br>
+ * if the AI is standing on a tile that is endangered by a ticking bomb<br>
+ *      run the runAwayFromBombAlgorithm to find the shortest path to a tile that is safe from bombs<br>
+ *      and follow the path<br>
+ *
+ * The mainAIAlgorithm checks what's the situation and follows the above rules<br>
+ * <br>
+ *
+ * The delay of the AI decision that can be set through a difficulty setting
+ * happens AFTER the getCloseToTargetAlgorithm waits for the bomb to explode
+ * So when the bomb explodes the delay starts counting down
+ *
  */
 public class AI {
     /**

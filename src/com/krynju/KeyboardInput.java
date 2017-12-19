@@ -1,6 +1,7 @@
 package com.krynju;
 
 import com.krynju.enums.Direction;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;

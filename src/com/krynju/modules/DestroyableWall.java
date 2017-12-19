@@ -2,8 +2,7 @@ package com.krynju.modules;
 
 import com.krynju.Game;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 /**Destroyable wall*/
 public class DestroyableWall extends Wall {
     private boolean destroyed = false;
@@ -21,7 +20,7 @@ public class DestroyableWall extends Wall {
     public void render(Graphics g) {
         if(!destroyed) {
             g.setColor(Game.destroyableWallColor);
-            g.fillRect((int) x, (int) y, 40, 40);
+            g.fillRect((int) x, (int) y, Field.tileSize, Field.tileSize);
         }
     }
 

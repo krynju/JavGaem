@@ -4,9 +4,7 @@ import com.krynju.Controller;
 import com.krynju.Game;
 import com.krynju.enums.Ending;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.LinkedList;
 
 /**Bomb object class
@@ -48,32 +46,32 @@ public class Bomb extends GameObject {
 
         /*draw the red danger zone*/
         g.setColor(Game.bombColor);
-        g.fillRect(assignedTile.getX(), assignedTile.getY(), 40, 40);
+        g.fillRect(assignedTile.getX(), assignedTile.getY(), Field.tileSize, Field.tileSize);
         for (Tile tile : dangerTiles) {
             if (!tile.isWallOnTile())
-                g.fillRect(tile.getX(), tile.getY(), 40, 40);
+                g.fillRect(tile.getX(), tile.getY(), Field.tileSize, Field.tileSize);
         }
 
         /*draw a gray bomb rectangle*/
         g.setColor(new Color(50,50,50));
-        g.fillOval(assignedTile.getX(), assignedTile.getY(), 40, 40);
+        g.fillOval(assignedTile.getX(), assignedTile.getY(), Field.tileSize, Field.tileSize);
 
 
         /*draw the countdown timer on the bomb*/
         g.setColor(Color.white);
-        g.setFont(new Font("Verdana",Font.PLAIN,21));
+        g.setFont(new Font("Verdana", Font.PLAIN, 26));
         if(timeElapsed < 2)
-            g.drawString(String.valueOf(2.0 - timeElapsed).substring(0,3),assignedTile.getX()+3,assignedTile.getY()+28);
+            g.drawString(String.valueOf(2.0 - timeElapsed).substring(0, 3), assignedTile.getX() + 4, assignedTile.getY() + 34);
         else
-            g.drawString(String.valueOf(0.0).substring(0,3),assignedTile.getX()+3,assignedTile.getY()+28);
+            g.drawString(String.valueOf(0.0).substring(0, 3), assignedTile.getX() + 4, assignedTile.getY() + 34);
 
         /*draw the "BOOM"'s over the danger zone*/
         g.setColor(Color.white);
-        g.setFont(new Font("Verdana",Font.PLAIN,12));
+        g.setFont(new Font("Verdana", Font.PLAIN, 15));
         if(timeElapsed>=1.8){
             for(Tile tile:dangerTiles){
                 if(!tile.isWallOnTile())
-                    g.drawString("BOOM",tile.getX()+1,tile.getY()+24);
+                    g.drawString("BOOM", tile.getX() + 1, tile.getY() + 30);
             }
         }
     }

@@ -19,6 +19,6 @@ public class NormalWall extends Wall{
     @Override
     public void render(Graphics g) {
             g.setColor(Game.normalWallColor);
-                    g.fillRect((int) x, (int) y, 40, 40);
+        g.fillRect((int) x, (int) y, Field.tileSize, Field.tileSize);
     }
 }
